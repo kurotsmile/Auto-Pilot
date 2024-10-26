@@ -22,13 +22,18 @@ public class App : MonoBehaviour
     public Transform tr_all_item_right;
     public Text txt_status_app;
     public Text txt_btn_memu;
+    public Text txt_btn_mode;
     public Image img_icon_btn_memu;
+    public Image img_icon_mode;
 
 
     [Header("Asset")]
     public Sprite sp_icon_start;
     public Sprite sp_icon_stop;
+    public Sprite sp_icon_auto_web;
+    public Sprite sp_icon_auto_app;
     private bool is_play_simulador=false;
+    private bool is_mode_web=true;
 
     void Start()
     {
@@ -36,6 +41,12 @@ public class App : MonoBehaviour
         this.adb_tasks.On_Load();
         this.adb_editor.On_Load();
         this.adb_editor.Load_Method_Menu_Right();
+
+        if(PlayerPrefs.GetInt("is_mode_web",1)==1)
+            this.is_mode_web=true;
+        else
+            this.is_mode_web=false;
+        this.Check_status_mode();
     }
 
     public void Quit_App()
@@ -103,5 +114,27 @@ public class App : MonoBehaviour
 
     public void Btn_show_setting(){
         this.cr.Create_Setting();
+    }
+
+    public void Btn_change_mode(){
+        if(this.is_mode_web){
+            this.is_mode_web=false;
+            PlayerPrefs.SetInt("is_mode_web",0);
+        }else{
+            this.is_mode_web=true;
+            PlayerPrefs.SetInt("is_mode_web",1);
+        }
+        this.Check_status_mode();
+    }
+
+    private void Check_status_mode(){
+        if(this.is_mode_web){
+            this.img_icon_mode.sprite=this.sp_icon_auto_web;
+            this.txt_btn_mode.text="Web";
+        }
+        else{
+            this.img_icon_mode.sprite=this.sp_icon_auto_app;
+            this.txt_btn_mode.text="App";
+        }
     }
 }
