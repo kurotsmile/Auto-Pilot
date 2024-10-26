@@ -4,6 +4,7 @@ using Carrot;
 using SimpleFileBrowser;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public enum CONTROL_ADB_TYPE{mouse_click,open_app,close_app,close_all_app,send_text,waiting,swipe}
@@ -34,6 +35,7 @@ public class ADB_Editor : MonoBehaviour
     
     private int length_method=0;
     private int index_sel_method=0;
+    private UnityAction act_close=null;
 
     public void On_Load(){
         this.panel_btn.SetActive(false);
@@ -592,6 +594,7 @@ public class ADB_Editor : MonoBehaviour
         this.panel_btn.SetActive(false);
         this.app.cr.play_sound_click();
         this.Load_Method_Menu_Right();
+        act_close?.Invoke();
     }
 
     public void On_Open(){
@@ -636,5 +639,9 @@ public class ADB_Editor : MonoBehaviour
     public IList Get_list_command_method_cur(){
         IList list_cmd=(IList) Json.Deserialize(PlayerPrefs.GetString("m_"+this.index_sel_method+"_data"));
         return list_cmd;
+    }
+
+    public void Set_Act_close(UnityAction act){
+        this.act_close=act;
     }
 }

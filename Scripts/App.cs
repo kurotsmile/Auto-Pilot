@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Cryptography;
 using Carrot;
 using UnityEngine;
 using UnityEngine.UI;
@@ -32,6 +33,9 @@ public class App : MonoBehaviour
     public Sprite sp_icon_stop;
     public Sprite sp_icon_auto_web;
     public Sprite sp_icon_auto_app;
+    public Sprite sp_icon_excel_file;
+    public Sprite sp_icon_text_file;
+
     private bool is_play_simulador=false;
     private bool is_mode_web=true;
 
@@ -47,6 +51,9 @@ public class App : MonoBehaviour
         else
             this.is_mode_web=false;
         this.Check_status_mode();
+        this.Load_menu_main();
+        this.adb_editor.Set_Act_close(Load_menu_main);
+        this.adb_tasks.Set_Act_Close(Load_menu_main);
     }
 
     public void Quit_App()
@@ -91,6 +98,8 @@ public class App : MonoBehaviour
         obj_item.transform.localPosition=new Vector3(1f,1f,1f);
         Carrot_Box_Item box_item=obj_item.GetComponent<Carrot_Box_Item>();
         obj_item.GetComponent<Image>().color=this.color_colum_b;
+        box_item.img_icon.color=Color.white;
+        box_item.txt_name.color=Color.white;
         box_item.check_type();
         return box_item;
     }
@@ -136,5 +145,18 @@ public class App : MonoBehaviour
             this.img_icon_mode.sprite=this.sp_icon_auto_app;
             this.txt_btn_mode.text="App";
         }
+    }
+
+    private void Load_menu_main(){
+        this.cr.clear_contain(this.tr_all_item);
+        Carrot_Box_Item item_file_excel=this.Add_item_main();
+        item_file_excel.set_title("Import Excel csv");
+        item_file_excel.set_tip("Import data to run automatically from excel file");
+        item_file_excel.set_icon_white(this.sp_icon_excel_file);
+
+        Carrot_Box_Item item_file_text=this.Add_item_main();
+        item_file_text.set_icon_white(this.sp_icon_text_file);
+        item_file_text.set_title("Import Text file");
+        item_file_text.set_tip("Import data to run automatically from text file");
     }
 }

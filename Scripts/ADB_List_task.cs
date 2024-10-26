@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Carrot;
 using SimpleFileBrowser;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class ADB_List_task : MonoBehaviour
@@ -18,6 +19,7 @@ public class ADB_List_task : MonoBehaviour
     private int index_cur_task=0;
     private bool is_play=false;
     private string s_data_task_temp=null;
+    private UnityAction act_close;
 
     public void On_Load(){
         this.panel_btn.SetActive(false);
@@ -36,6 +38,7 @@ public class ADB_List_task : MonoBehaviour
     public void Close_task_list(){
         this.panel_btn.SetActive(false);
         this.On_Stop();
+        act_close?.Invoke();
     }
 
     public void Open_file_tastk_app(){
@@ -59,6 +62,7 @@ public class ADB_List_task : MonoBehaviour
     }
 
     private void Update_list_task_ui(){
+        this.app.cr.clear_contain(this.app.tr_all_item);
         for(int i=0;i<this.list_task.Count;i++){
             var index=i;
                 
@@ -166,5 +170,9 @@ public class ADB_List_task : MonoBehaviour
         {
             Debug.LogError("Error save file: " + e.Message);
         }
+    }
+
+    public void Set_Act_Close(UnityAction act){
+        this.act_close=act;
     }
 }

@@ -1453,7 +1453,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -92.5, y: -22.929993}
+  m_AnchoredPosition: {x: -92.5, y: -21.4}
   m_SizeDelta: {x: 67.96, y: 62.3}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &401357789
@@ -4485,7 +4485,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -16.200012, y: -22.929993}
+  m_AnchoredPosition: {x: -16.200012, y: -21.4}
   m_SizeDelta: {x: 67.96, y: 62.3}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &1098404596
@@ -6294,6 +6294,8 @@ MonoBehaviour:
   sp_icon_stop: {fileID: 21300000, guid: e2518a55c99a7da4e917441c26cdd95e, type: 3}
   sp_icon_auto_web: {fileID: 21300000, guid: 724cbc915a6b77442b3b26402d70df43, type: 3}
   sp_icon_auto_app: {fileID: 21300000, guid: 4c05a365d2833e04c8762f891301c2fd, type: 3}
+  sp_icon_excel_file: {fileID: 21300000, guid: 74637b5f9967dec48a2974d96b554621, type: 3}
+  sp_icon_text_file: {fileID: 21300000, guid: 9f78924f24ffc284f9c0c7e97c0078c7, type: 3}
 --- !u!114 &1667508231
 MonoBehaviour:
   m_ObjectHideFlags: 0
