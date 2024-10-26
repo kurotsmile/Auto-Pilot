@@ -6,6 +6,8 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
 
 public enum CONTROL_ADB_TYPE{mouse_click,open_app,close_app,close_all_app,send_text,waiting,swipe}
 public class ADB_Editor : MonoBehaviour
@@ -36,6 +38,7 @@ public class ADB_Editor : MonoBehaviour
     private int length_method=0;
     private int index_sel_method=0;
     private UnityAction act_close=null;
+    private IWebDriver driver;
 
     public void On_Load(){
         this.panel_btn.SetActive(false);
@@ -44,6 +47,15 @@ public class ADB_Editor : MonoBehaviour
             IList list_cmd= (IList) Carrot.Json.Deserialize(PlayerPrefs.GetString("m_"+index_sel_method+"_data"));
             this.app.adb.Set_List_Command(list_cmd);
         }
+
+        ChromeDriverService service = ChromeDriverService.CreateDefaultService("J:\\Tool\\MKX Reg Auto\\MKX Reg\\bin\\Release\\net8.0-windows\\chromedriver.exe");
+        service.HideCommandPromptWindow = true;
+
+        ChromeOptions options = new ChromeOptions();
+        options.AddArgument("--start-maximized");
+        driver = new ChromeDriver(service, options);
+
+        driver.Navigate().GoToUrl("https://www.carrotstore.web.app");
     }
 
     public void Show_Editor(){
