@@ -1,9 +1,6 @@
-﻿using System;
-using System.Security.Cryptography;
-using Carrot;
+﻿using Carrot;
 using UnityEngine;
 using UnityEngine.UI;
-
 public class App : MonoBehaviour
 {
     [Header("Main Object")]
