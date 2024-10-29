@@ -49,11 +49,38 @@ public class ADB_Editor : MonoBehaviour
         this.app.cr.clear_contain(this.app.tr_all_item);
         this.app.cr.clear_contain(this.app.tr_all_item_right);
         this.app.cr.play_sound_click();
-        this.Load_Menu_Right();
+        if(this.app.Get_Mode())
+            this.Load_Menu_Right_Web();
+        else
+            this.Load_Menu_Right_App();
         this.panel_btn.SetActive(true);
     }
 
-    private void Load_Menu_Right(Transform tr_father=null,int index_insert=-1){
+    private void Load_Menu_Right_Web(Transform tr_father=null,int index_insert=-1){
+
+        this.app.Add_Item_Right("Open The Web","Open the web with the url",this.sp_icon_open_app,tr_father).set_act(()=>{
+            if(index_insert!=-1)
+                this.Show_edit_control(index_insert,CONTROL_ADB_TYPE.open_app,true);
+            else
+                this.Show_edit_control(-1,CONTROL_ADB_TYPE.open_app);
+        });
+
+        this.app.Add_Item_Right("Add Mouse click","Add position x,y click",this.sp_icon_mouse,tr_father).set_act(()=>{
+            if(index_insert!=-1)
+                this.Show_edit_control(index_insert,CONTROL_ADB_TYPE.mouse_click,true);
+            else
+                this.Show_edit_control(-1,CONTROL_ADB_TYPE.mouse_click);
+        });
+
+        this.app.Add_Item_Right("Close The Web","Close the browser",this.sp_icon_close_app,tr_father).set_act(()=>{
+            if(index_insert!=-1)
+                this.Show_edit_control(index_insert,CONTROL_ADB_TYPE.close_app,true);
+            else
+                this.Show_edit_control(-1,CONTROL_ADB_TYPE.close_app);
+        });
+    }
+
+    private void Load_Menu_Right_App(Transform tr_father=null,int index_insert=-1){
         this.app.Add_Item_Right("Add Mouse click","Add position x,y click",this.sp_icon_mouse,tr_father).set_act(()=>{
             if(index_insert!=-1)
                 this.Show_edit_control(index_insert,CONTROL_ADB_TYPE.mouse_click,true);
@@ -608,7 +635,7 @@ public class ADB_Editor : MonoBehaviour
         this.box=this.app.cr.Create_Box();
         this.box.set_icon(this.sp_icon_inster_after);
         this.box.set_title("Insert next element after this element");
-        this.Load_Menu_Right(this.box.area_list_contain,index_insert);
+        this.Load_Menu_Right_App(this.box.area_list_contain,index_insert);
     }
 
     public void Add_item_for_list(CONTROL_ADB_TYPE type,string s_tip="Control ADB"){
@@ -626,7 +653,10 @@ public class ADB_Editor : MonoBehaviour
         }else{
             this.txt_play.text="Play";
             this.img_icon_play.sprite=this.app.sp_icon_start;
-            this.app.adb.On_Play(this.list_command);
+            if(this.app.Get_Mode())
+                this.app.apcd.Run(Json.Serialize(this.list_command));
+            else
+                this.app.adb.On_Play(this.list_command);
         }
     }
 

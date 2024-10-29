@@ -14,6 +14,7 @@ public class App : MonoBehaviour
     public Carrot.Carrot cr;
     public Carrot_File file;
     public GameObject item_box_prefab;
+    public App_Python_Chrome_Driver apcd;
 
     [Header("UI")]
     public Transform tr_all_item;
@@ -155,5 +156,9 @@ public class App : MonoBehaviour
         item_file_text.set_icon_white(this.sp_icon_text_file);
         item_file_text.set_title("Import Text file");
         item_file_text.set_tip("Import data to run automatically from text file");
+    }
+
+    public bool Get_Mode(){
+        return this.is_mode_web;
     }
 }

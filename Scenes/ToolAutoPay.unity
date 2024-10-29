@@ -6231,6 +6231,7 @@ GameObject:
   - component: {fileID: 1667508232}
   - component: {fileID: 1667508233}
   - component: {fileID: 1667508234}
+  - component: {fileID: 1667508235}
   m_Layer: 0
   m_Name: app
   m_TagString: Untagged
@@ -6266,12 +6267,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   color_nomal:
+    serializedVersion: 2
     rgba: 4294967295
   color_sel:
+    serializedVersion: 2
     rgba: 4278231807
   color_colum_a:
+    serializedVersion: 2
     rgba: 4278263880
   color_colum_b:
+    serializedVersion: 2
     rgba: 4280427042
   adb: {fileID: 1667508231}
   adb_editor: {fileID: 1667508233}
@@ -6279,6 +6284,7 @@ MonoBehaviour:
   cr: {fileID: 857479860}
   file: {fileID: 614486386}
   item_box_prefab: {fileID: 346399769378897854, guid: 5c76e0e7f1ec6f749989da9d070de244, type: 3}
+  apcd: {fileID: 1667508235}
   tr_all_item: {fileID: 1753495666}
   tr_all_item_right: {fileID: 600945953}
   txt_status_app: {fileID: 486109017}
@@ -6362,6 +6368,18 @@ MonoBehaviour:
   panel_btn: {fileID: 1739248859}
   img_btn_play: {fileID: 254372032}
   txt_btn_play: {fileID: 686592286}
+--- !u!114 &1667508235
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1667508228}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc02a1d6bb88e904c9ab574df8aeff74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1739248859
 GameObject:
   m_ObjectHideFlags: 0
