@@ -1,11 +1,30 @@
+using System;
 using System.Collections;
 using Carrot;
 using SimpleFileBrowser;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public enum CONTROL_ADB_TYPE{mouse_click,open_app,close_app,close_all_app,send_text,waiting,swipe}
+public enum CONTROL_ADB_TYPE{
+    mouse_click,
+    open_app,
+    close_app,
+    close_all_app,
+    send_text,
+    waiting,
+    swipe,
+    open_app_setting
+}
+
+public enum CONTROL_WEB_TYPE{
+    open_url,
+    click_emp,
+    find_emp,
+    close
+}
+
 public class ADB_Editor : MonoBehaviour
 {
     [Header("Obj Main")]
@@ -81,6 +100,26 @@ public class ADB_Editor : MonoBehaviour
     }
 
     private void Load_Menu_Right_App(Transform tr_father=null,int index_insert=-1){
+        IDictionary data_control=null;
+
+        if(index_insert!=-1)
+            data_control=(IDictionary)this.list_command[index_insert];
+        else
+            data_control=(IDictionary) Json.Deserialize("{}");
+
+
+        this.app.Add_Item_Right("Add Mouse click","Add position x,y click",this.sp_icon_mouse,tr_father).set_act(()=>{
+            this.Box_add_or_edit(this.sp_icon_mouse);
+            Carrot_Box_Item item_m_x=this.box.create_item_of_index("item_m_x",0);
+            item_m_x.set_icon(this.sp_icon_mouse);
+            item_m_x.set_title("Position x");
+            item_m_x.set_tip("Position x mouse and tap");
+            item_m_x.check_type();
+            if(index_insert!=-1)if(data_control["x"]!=null) item_m_x.set_val(data_control["x"].ToString());
+            this.box.update_color_table_row();
+        });
+
+
         this.app.Add_Item_Right("Add Mouse click","Add position x,y click",this.sp_icon_mouse,tr_father).set_act(()=>{
             if(index_insert!=-1)
                 this.Show_edit_control(index_insert,CONTROL_ADB_TYPE.mouse_click,true);
@@ -121,6 +160,13 @@ public class ADB_Editor : MonoBehaviour
                 this.Show_edit_control(index_insert,CONTROL_ADB_TYPE.swipe,true);
             else
                 this.Show_edit_control(-1,CONTROL_ADB_TYPE.swipe);
+        });
+
+        this.app.Add_Item_Right("Open app setting","Open application settings by application package id",this.app.sp_icon_app_setting,tr_father).set_act(()=>{
+            if(index_insert!=-1)
+                this.Show_edit_control(index_insert,CONTROL_ADB_TYPE.open_app_setting,true);
+            else
+                this.Show_edit_control(-1,CONTROL_ADB_TYPE.open_app_setting);
         });
 
         this.app.Add_Item_Right("Stop all applications","Stop all user applications excluding system applications",this.sp_icon_stop_all,tr_father).set_act(()=>{
@@ -260,10 +306,16 @@ public class ADB_Editor : MonoBehaviour
                     cr_item.set_tip("Move To :"+control_data["x1"].ToString()+","+control_data["y1"].ToString()+" -> "+control_data["x2"].ToString()+","+control_data["y2"].ToString());
                 }
 
-                 if(control_data["type"].ToString()=="close_all_app"){
+                if(control_data["type"].ToString()=="close_all_app"){
                     cr_item.set_icon_white(this.sp_icon_stop_all);
                     cr_item.set_title("Stop All");
                     cr_item.set_tip(control_data["tip"].ToString());
+                }
+
+                if(control_data["type"].ToString()==CONTROL_ADB_TYPE.open_app_setting.ToString()){
+                    cr_item.set_icon_white(this.app.sp_icon_app_setting);
+                    cr_item.set_title("Open App setting");
+                    cr_item.set_tip("App id:"+control_data["id_app"].ToString());
                 }
 
                 cr_item.check_type();
@@ -275,6 +327,7 @@ public class ADB_Editor : MonoBehaviour
                     if(control_data["type"].ToString()=="close_app") this.app.adb.On_Stop_App(control_data["id_app"].ToString());
                     if(control_data["type"].ToString()=="close_all_app") this.app.adb.On_stop_all_app();
                     if(control_data["type"].ToString()=="swipe")  this.app.adb.On_Swipe(control_data["x1"].ToString(),control_data["y1"].ToString(),control_data["x2"].ToString(),control_data["y2"].ToString(),int.Parse(control_data["timer"].ToString()));
+                    if(control_data["type"].ToString()==CONTROL_ADB_TYPE.open_app_setting.ToString()) this.app.adb.Open_Setting_App(control_data["id_app"].ToString());
                 });
 
                 
@@ -298,6 +351,7 @@ public class ADB_Editor : MonoBehaviour
                         if(control_data["type"].ToString()=="waiting") this.Show_edit_control(index,CONTROL_ADB_TYPE.waiting);
                         if(control_data["type"].ToString()=="send_text") this.Show_edit_control(index,CONTROL_ADB_TYPE.send_text);
                         if(control_data["type"].ToString()=="swipe") this.Show_edit_control(index,CONTROL_ADB_TYPE.swipe);
+                        if(control_data["type"].ToString()==CONTROL_ADB_TYPE.open_app_setting.ToString()) this.Show_edit_control(index,CONTROL_ADB_TYPE.open_app_setting);
                     });
                 }
 
@@ -604,6 +658,42 @@ public class ADB_Editor : MonoBehaviour
             });
         }
 
+        if(type==CONTROL_ADB_TYPE.open_app_setting){
+            this.box.set_icon(this.app.sp_icon_app_setting);
+            if(index==-1)
+                this.box.set_title("Add open app setting");
+            else
+                this.box.set_title("Update open app setting");
+            Carrot.Carrot_Box_Item inp_id_app=this.box.create_item("id_app");
+            inp_id_app.set_title("Application Package Name (Application ID)");
+            inp_id_app.set_tip("Enter the application ID to open app setting");
+            inp_id_app.set_icon(this.app.cr.icon_carrot_write);
+            inp_id_app.set_type(Carrot.Box_Item_Type.box_value_input);
+            if(data_control["id_app"]!=null) inp_id_app.set_val(data_control["id_app"].ToString());
+
+            btn_Panel=this.box.create_panel_btn();
+
+            Carrot_Button_Item btn_done=btn_Panel.create_btn("btn_done");
+            btn_done.set_bk_color(this.app.cr.color_highlight);
+            btn_done.set_label("Done");
+            btn_done.set_label_color(Color.white);
+            btn_done.set_icon_white(this.app.cr.icon_carrot_done);
+            btn_done.set_act_click(()=>{
+                data_control["id_app"]=inp_id_app.get_val();
+                if(is_insert){
+                    this.list_command.Insert(index+1,data_control);
+                }else{
+                    if(index!=-1)
+                        this.list_command[index]=data_control;
+                    else
+                        this.list_command.Add(data_control);
+                }
+                this.box.close();
+                this.app.cr.play_sound_click();
+                this.Update_list_ui();
+            });
+        }
+
         Carrot_Button_Item btn_cancel=btn_Panel.create_btn("btn_cancel");
         btn_cancel.set_bk_color(this.app.cr.color_highlight);
         btn_cancel.set_label("Cancel");
@@ -671,5 +761,12 @@ public class ADB_Editor : MonoBehaviour
 
     public void Set_Act_close(UnityAction act){
         this.act_close=act;
+    }
+
+    public Carrot_Box Box_add_or_edit(Sprite icon){
+        if(this.box!=null) this.box.close();
+        this.box=this.app.cr.Create_Box();
+        this.box.set_icon(icon);
+        return this.box;
     }
 }

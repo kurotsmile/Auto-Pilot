@@ -42,7 +42,6 @@ public class Devices_Manager : MonoBehaviour
             for(int i=0;i<list_device.Count;i++){
                 if(list_device[i].Trim()!="List of devices attached"){
                     var index=i;
-                    Debug.Log(list_select[index]);
                     Carrot_Box_Item device_item=box_devices.create_item("item_device");
                     device_item.set_title(list_device[i]);
                     device_item.set_tip("Device Android");

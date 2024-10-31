@@ -208,13 +208,9 @@ public class ADB_Control : MonoBehaviour
         string error = process.StandardError.ReadToEnd();
         process.WaitForExit();
         if (string.IsNullOrEmpty(error))
-        {
             Debug.Log("Output: " + output);
-        }
         else
-        {
             Debug.LogError("Error: " + error);
-        }
         Act_done?.Invoke(output);
     }
 
