@@ -27,8 +27,9 @@ public class ADB_Control : MonoBehaviour
     private bool is_play=false;
     private bool is_timer_waiting=false;
 
-    private List<string> list_id_devices;
+    public List<string> list_id_devices;
     private UnityAction act_done;
+    private Carrot_Box box=null;
 
     public void On_Play(IList list_cmd,UnityAction act_done=null){
         if(this.list_command==null||this.list_command.Count==0){
@@ -291,8 +292,17 @@ public class ADB_Control : MonoBehaviour
     }
 
     public void Get_list_app(){
-        this.GetInstalledApps(null,datas=>{
-
+        this.GetInstalledApps(this.list_id_devices[0],datas=>{
+            this.box=this.app.cr.Create_Box();
+            this.box.set_icon(this.app.cr.icon_carrot_database);
+            this.box.set_title("List Application");
+            for(int i=0;i<datas.Count;i++){
+                Carrot_Box_Item box_item_app=this.box.create_item("item_app");
+                box_item_app.set_title("App "+i);
+                box_item_app.set_tip(datas[i]);
+                box.set_icon(this.app.cr.icon_carrot_app);
+            }
+            this.app.cr.Show_msg(datas.ToString());
         });
     }
 

@@ -175,4 +175,11 @@ public class ADB_List_task : MonoBehaviour
     public void Set_Act_Close(UnityAction act){
         this.act_close=act;
     }
+
+    public void Show_List_App(){
+        this.app.adb.GetInstalledApps(this.app.adb.list_id_devices[0],apps=>{
+            this.list_task=apps;
+            this.Update_list_task_ui();
+        });
+    }
 }
