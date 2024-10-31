@@ -6520,6 +6520,7 @@ GameObject:
   - component: {fileID: 1667508233}
   - component: {fileID: 1667508234}
   - component: {fileID: 1667508235}
+  - component: {fileID: 1667508236}
   m_Layer: 0
   m_Name: app
   m_TagString: Untagged
@@ -6573,6 +6574,7 @@ MonoBehaviour:
   file: {fileID: 614486386}
   item_box_prefab: {fileID: 346399769378897854, guid: 5c76e0e7f1ec6f749989da9d070de244, type: 3}
   apcd: {fileID: 1667508235}
+  devices_manager: {fileID: 1667508236}
   tr_all_item: {fileID: 1753495666}
   tr_all_item_right: {fileID: 600945953}
   txt_status_app: {fileID: 486109017}
@@ -6586,6 +6588,7 @@ MonoBehaviour:
   sp_icon_auto_app: {fileID: 21300000, guid: 4c05a365d2833e04c8762f891301c2fd, type: 3}
   sp_icon_excel_file: {fileID: 21300000, guid: 74637b5f9967dec48a2974d96b554621, type: 3}
   sp_icon_text_file: {fileID: 21300000, guid: 9f78924f24ffc284f9c0c7e97c0078c7, type: 3}
+  sp_icon_devices: {fileID: 21300000, guid: e7b31681ea9c1be49bf70eb4f55d21ce, type: 3}
 --- !u!114 &1667508231
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6601,7 +6604,6 @@ MonoBehaviour:
   app: {fileID: 1667508230}
   is_memu: 0
   slider_process_length: {fileID: 2083602589}
-  sp_icon_devices: {fileID: 21300000, guid: e7b31681ea9c1be49bf70eb4f55d21ce, type: 3}
 --- !u!114 &1667508232
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6668,6 +6670,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc02a1d6bb88e904c9ab574df8aeff74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1667508236
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1667508228}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da5f8ab4234c8694db84a1e1f3599dd1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  app: {fileID: 1667508230}
+  list_id_devices: []
 --- !u!1 &1739248859
 GameObject:
   m_ObjectHideFlags: 0

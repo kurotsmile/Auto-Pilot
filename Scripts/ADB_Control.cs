@@ -16,10 +16,7 @@ public class ADB_Control : MonoBehaviour
     [Header("UI")]
     public Slider slider_process_length;
 
-    [Header("Asset")]
-    public Sprite sp_icon_devices;
     private IList list_command;
-
     private int index_comand_cur=0;
     private float timer_step=0;
     private float timer_step_waiting=2;
@@ -27,15 +24,13 @@ public class ADB_Control : MonoBehaviour
     private bool is_play=false;
     private bool is_timer_waiting=false;
 
-    public List<string> list_id_devices;
     private UnityAction act_done;
-    private Carrot_Box box=null;
 
     public void On_Play(IList list_cmd,UnityAction act_done=null){
         if(this.list_command==null||this.list_command.Count==0){
             this.app.cr.Show_msg("ADB Control","No commands have been created yet!",Msg_Icon.Alert);
         }
-        else if(this.list_id_devices==null||this.list_id_devices.Count==0){
+        else if(this.app.devices_manager.list_id_devices==null||this.app.devices_manager.list_id_devices.Count==0){
             this.app.cr.Show_msg("No Devices","You have not plugged in a device to run, please select a device or emulator to continue this process!",Msg_Icon.Alert);
         }
         else
@@ -99,9 +94,9 @@ public class ADB_Control : MonoBehaviour
             this.RunCommandWithMemu("adb shell input tap "+x+" "+y);
         }
         else{
-            if(this.Check_devices_alive()){
-                for(int i=0;i<this.list_id_devices.Count;i++){
-                    string id_device=this.list_id_devices[i];
+            if(this.app.devices_manager.Check_devices_alive()){
+                for(int i=0;i<this.app.devices_manager.list_id_devices.Count;i++){
+                    string id_device=this.app.devices_manager.list_id_devices[i];
                     this.RunADBCommand("adb -s "+id_device+" shell input tap "+x+" "+y);
                 }
             }
@@ -113,9 +108,9 @@ public class ADB_Control : MonoBehaviour
         if(this.is_memu){
             this.RunCommandWithMemu("adb shell input text \""+s_text+"\"");
         }else{
-            if(this.Check_devices_alive()){
-                for(int i=0;i<this.list_id_devices.Count;i++){
-                    string id_device=this.list_id_devices[i];
+            if(this.app.devices_manager.Check_devices_alive()){
+                for(int i=0;i<this.app.devices_manager.list_id_devices.Count;i++){
+                    string id_device=this.app.devices_manager.list_id_devices[i];
                     this.RunADBCommand("adb -s "+id_device+" shell input text \""+s_text+"\"");
                 }
             }
@@ -128,9 +123,9 @@ public class ADB_Control : MonoBehaviour
             this.RunCommandWithMemu("adb shell input swipe "+x1+" "+y1+" "+x2+" "+y2+" "+timer_ms);
         }
         else{
-            if(this.Check_devices_alive()){
-                for(int i=0;i<this.list_id_devices.Count;i++){
-                    string id_device=this.list_id_devices[i];
+            if(this.app.devices_manager.Check_devices_alive()){
+                for(int i=0;i<this.app.devices_manager.list_id_devices.Count;i++){
+                    string id_device=this.app.devices_manager.list_id_devices[i];
                     this.RunADBCommand("adb -s "+id_device+" shell input swipe "+x1+" "+y1+" "+x2+" "+y2+" "+timer_ms);
                 }
             }
@@ -143,9 +138,9 @@ public class ADB_Control : MonoBehaviour
             this.RunCommandWithMemu("adb shell monkey -p "+id_app+" -v 1");
         }
         else{
-            if(this.Check_devices_alive()){
-                for(int i=0;i<this.list_id_devices.Count;i++){
-                    string id_device=this.list_id_devices[i];
+            if(this.app.devices_manager.Check_devices_alive()){
+                for(int i=0;i<this.app.devices_manager.list_id_devices.Count;i++){
+                    string id_device=this.app.devices_manager.list_id_devices[i];
                     this.RunADBCommand("adb shell monkey -p "+id_app+" -v 1");
                 }
             }
@@ -159,9 +154,9 @@ public class ADB_Control : MonoBehaviour
             this.RunCommandWithMemu("adb shell am force-stop "+packageName);
         }
         else{
-            if(this.Check_devices_alive()){
-                for(int i=0;i<this.list_id_devices.Count;i++){
-                    string id_device=this.list_id_devices[i];
+            if(this.app.devices_manager.Check_devices_alive()){
+                for(int i=0;i<this.app.devices_manager.list_id_devices.Count;i++){
+                    string id_device=this.app.devices_manager.list_id_devices[i];
                     this.RunADBCommand("adb -s "+id_device+" shell am force-stop "+packageName);
                 }
             }
@@ -173,20 +168,12 @@ public class ADB_Control : MonoBehaviour
         if(this.is_memu){
             this.RunCommandWithMemu("adb shell am kill-all");
         }else{
-            if(this.Check_devices_alive()){
-                for(int i=0;i<this.list_id_devices.Count;i++){
-                    string id_device=this.list_id_devices[i];
+            if(this.app.devices_manager.Check_devices_alive()){
+                for(int i=0;i<this.app.devices_manager.list_id_devices.Count;i++){
+                    string id_device=this.app.devices_manager.list_id_devices[i];
                     this.RunADBCommand("adb -s "+id_device+" shell am kill-all");
                 }
             }
-        }
-    }
-
-    private bool Check_devices_alive(){
-        if(this.list_id_devices==null||this.list_id_devices.Count==0){
-            return false;
-        }else{
-            return true;
         }
     }
 
@@ -206,7 +193,7 @@ public class ADB_Control : MonoBehaviour
         act_done?.Invoke(output);
     }
 
-     public void RunADBCommand(string command,UnityAction<string> Act_done=null)
+    public void RunADBCommand(string command,UnityAction<string> Act_done=null)
     {
         System.Diagnostics.Process process = new();
         process.StartInfo.FileName = "cmd.exe";
@@ -221,7 +208,7 @@ public class ADB_Control : MonoBehaviour
         Act_done?.Invoke(output);
     }
 
-    private void ListConnectedDevices(UnityAction<List<string>> Act_done)
+    public void ListConnectedDevices(UnityAction<List<string>> Act_done)
     {
         if(this.is_memu){
             this.RunCommandWithMemu("adb devices",output=>{
@@ -247,63 +234,6 @@ public class ADB_Control : MonoBehaviour
             }
         }
         Act_done?.Invoke(deviceList);
-    }
-
-    public void Btn_show_list_devices(){
-        this.ListConnectedDevices(list=>{
-            Carrot_Box box_devices=this.app.cr.Create_Box();
-            box_devices.set_title("List Devices");
-            box_devices.set_icon(this.sp_icon_devices);
-
-            List<string> list_device=new();
-            if(list.Count>=0){
-                for(int i=0;i<list.Count;i++){
-                    if(list[i].Trim()!="List of devices attached"){
-                        Carrot_Box_Item device_item=box_devices.create_item("item_device");
-                        device_item.set_title(list[i]);
-                        device_item.set_tip("Device Android");
-                        device_item.set_icon(this.app.cr.icon_carrot_app);
-                        list_device.Add(list[i]);
-                    }
-                }
-            }
-            Carrot_Box_Btn_Panel btn_Panel=box_devices.create_panel_btn();
-            Carrot_Button_Item btn_done=btn_Panel.create_btn("btn_done");
-            btn_done.set_bk_color(this.app.cr.color_highlight);
-            btn_done.set_label("Done");
-            btn_done.set_label_color(Color.white);
-            btn_done.set_icon_white(this.app.cr.icon_carrot_done);
-            btn_done.set_act_click(()=>{
-                this.list_id_devices=list_device;
-                box_devices.close();
-                this.app.cr.play_sound_click();
-            });
-
-            Carrot_Button_Item btn_cancel=btn_Panel.create_btn("btn_cancel");
-            btn_cancel.set_bk_color(this.app.cr.color_highlight);
-            btn_cancel.set_label("Cancel");
-            btn_cancel.set_label_color(Color.white);
-            btn_cancel.set_icon_white(this.app.cr.icon_carrot_cancel);
-            btn_cancel.set_act_click(()=>{
-                box_devices.close();
-                this.app.cr.play_sound_click();
-            });
-        });
-    }
-
-    public void Get_list_app(){
-        this.GetInstalledApps(this.list_id_devices[0],datas=>{
-            this.box=this.app.cr.Create_Box();
-            this.box.set_icon(this.app.cr.icon_carrot_database);
-            this.box.set_title("List Application");
-            for(int i=0;i<datas.Count;i++){
-                Carrot_Box_Item box_item_app=this.box.create_item("item_app");
-                box_item_app.set_title("App "+i);
-                box_item_app.set_tip(datas[i]);
-                box.set_icon(this.app.cr.icon_carrot_app);
-            }
-            this.app.cr.Show_msg(datas.ToString());
-        });
     }
 
     public void GetInstalledApps(string deviceSerial = null,UnityAction<List<string>> action_done=null)

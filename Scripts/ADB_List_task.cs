@@ -177,7 +177,7 @@ public class ADB_List_task : MonoBehaviour
     }
 
     public void Show_List_App(){
-        this.app.adb.GetInstalledApps(this.app.adb.list_id_devices[0],apps=>{
+        this.app.adb.GetInstalledApps(this.app.devices_manager.list_id_devices[0],apps=>{
             this.list_task=apps;
             this.Update_list_task_ui();
         });

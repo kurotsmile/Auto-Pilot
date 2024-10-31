@@ -15,6 +15,7 @@ public class App : MonoBehaviour
     public Carrot_File file;
     public GameObject item_box_prefab;
     public App_Python_Chrome_Driver apcd;
+    public Devices_Manager devices_manager;
 
     [Header("UI")]
     public Transform tr_all_item;
@@ -33,6 +34,7 @@ public class App : MonoBehaviour
     public Sprite sp_icon_auto_app;
     public Sprite sp_icon_excel_file;
     public Sprite sp_icon_text_file;
+    public Sprite  sp_icon_devices;
 
     private bool is_play_simulador=false;
     private bool is_mode_web=true;
@@ -83,10 +85,6 @@ public class App : MonoBehaviour
         this.file.Set_filter(Carrot_File_Data.JsonData);
         this.adb_editor.Save_data_json_control();
         this.cr.play_sound_click();
-    }
-
-    public void Btn_show_list_app(){
-        this.adb.Get_list_app();
     }
 
     public Carrot_Box_Item Add_item_main(){
