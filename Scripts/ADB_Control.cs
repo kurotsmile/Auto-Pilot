@@ -1,5 +1,3 @@
-
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using Carrot;
@@ -195,16 +193,28 @@ public class ADB_Control : MonoBehaviour
 
     public void RunADBCommand(string command,UnityAction<string> Act_done=null)
     {
-        System.Diagnostics.Process process = new();
-        process.StartInfo.FileName = "cmd.exe";
-        process.StartInfo.Arguments = "/c " + command;
-        process.StartInfo.RedirectStandardOutput = true;
+        System.Diagnostics.Process process = new System.Diagnostics.Process();
+        
+        process.StartInfo.FileName = "powershell.exe";
+        process.StartInfo.Arguments = command;
+
         process.StartInfo.UseShellExecute = false;
+        process.StartInfo.RedirectStandardOutput = true;
+        process.StartInfo.RedirectStandardError = true;
         process.StartInfo.CreateNoWindow = true;
         process.Start();
 
         string output = process.StandardOutput.ReadToEnd();
+        string error = process.StandardError.ReadToEnd();
         process.WaitForExit();
+        if (string.IsNullOrEmpty(error))
+        {
+            Debug.Log("Output: " + output);
+        }
+        else
+        {
+            Debug.LogError("Error: " + error);
+        }
         Act_done?.Invoke(output);
     }
 
@@ -259,5 +269,17 @@ public class ADB_Control : MonoBehaviour
 
     public void Set_List_Command(IList list_cmd){
         this.list_command=list_cmd;
+    }
+
+    public void Open_Setting_App(string id_app){
+        this.RunADBCommand_All_Device("shell am start -a android.settings.APPLICATION_DETAILS_SETTINGS -d package:"+id_app);
+    }
+
+    public void RunADBCommand_One_Device(string id_device,string s_command,UnityAction<string> act_done){
+        this.RunADBCommand("adb -s "+id_device+" "+s_command,act_done);
+    }
+
+    public void RunADBCommand_All_Device(string s_command){
+        for(int i=0;i<this.app.devices_manager.list_id_devices.Count;i++) this.RunADBCommand("adb -s "+this.app.devices_manager.list_id_devices[i]+" "+s_command);
     }
 }

@@ -13,7 +13,7 @@ OcclusionCullingSettings:
 --- !u!104 &2
 RenderSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 9
+  serializedVersion: 10
   m_Fog: 0
   m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_FogMode: 3
@@ -42,8 +42,8 @@ RenderSettings:
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 12
-  m_GIWorkflowMode: 1
+  serializedVersion: 13
+  m_BakeOnSceneLoad: 0
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -66,9 +66,6 @@ LightmapSettings:
     m_LightmapParameters: {fileID: 0}
     m_LightmapsBakeMode: 1
     m_TextureCompression: 1
-    m_FinalGather: 0
-    m_FinalGatherFiltering: 1
-    m_FinalGatherRayCount: 256
     m_ReflectionCompression: 2
     m_MixedBakeMode: 2
     m_BakeBackend: 0
@@ -3999,9 +3996,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1667508231}
-        m_TargetAssemblyTypeName: ADB_Control, Assembly-CSharp
-        m_MethodName: Btn_show_list_devices
+      - m_Target: {fileID: 1667508236}
+        m_TargetAssemblyTypeName: Devices_Manager, Assembly-CSharp
+        m_MethodName: Show_list_devices
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6589,6 +6586,7 @@ MonoBehaviour:
   sp_icon_excel_file: {fileID: 21300000, guid: 74637b5f9967dec48a2974d96b554621, type: 3}
   sp_icon_text_file: {fileID: 21300000, guid: 9f78924f24ffc284f9c0c7e97c0078c7, type: 3}
   sp_icon_devices: {fileID: 21300000, guid: e7b31681ea9c1be49bf70eb4f55d21ce, type: 3}
+  sp_icon_app_setting: {fileID: 21300000, guid: 20db880507d35dc4281aa788c7c1bcd4, type: 3}
 --- !u!114 &1667508231
 MonoBehaviour:
   m_ObjectHideFlags: 0

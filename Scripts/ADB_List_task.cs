@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using Carrot;
 using SimpleFileBrowser;
@@ -65,7 +64,7 @@ public class ADB_List_task : MonoBehaviour
         this.app.cr.clear_contain(this.app.tr_all_item);
         for(int i=0;i<this.list_task.Count;i++){
             var index=i;
-                
+            var id_app=this.list_task[i];
             Carrot_Box_Item box_item=this.app.Add_item_main();
             box_item.set_title("App "+i);
             box_item.txt_name.color=Color.white;
@@ -74,6 +73,14 @@ public class ADB_List_task : MonoBehaviour
             box_item.set_act(()=>{
                 this.index_cur_task=index;
                 this.app.txt_status_app.text="Select app index:"+index;
+            });
+
+            Carrot_Box_Btn_Item btn_app_setting=box_item.create_item();
+            btn_app_setting.set_icon_color(Color.white);
+            btn_app_setting.set_icon(app.sp_icon_app_setting);
+            btn_app_setting.set_color(app.cr.color_highlight);
+            btn_app_setting.set_act(()=>{
+                this.app.adb.Open_Setting_App(id_app);
             });
 
             Carrot_Box_Btn_Item btn_del=box_item.create_item();

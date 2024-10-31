@@ -35,6 +35,7 @@ public class App : MonoBehaviour
     public Sprite sp_icon_excel_file;
     public Sprite sp_icon_text_file;
     public Sprite  sp_icon_devices;
+    public Sprite  sp_icon_app_setting;
 
     private bool is_play_simulador=false;
     private bool is_mode_web=true;
