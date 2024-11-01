@@ -319,8 +319,14 @@ public class ADB_Editor : MonoBehaviour
 
                 if(control_data["type"].ToString()==CONTROL_ADB_TYPE.adb_cmd.ToString()){
                     cr_item.set_icon_white(this.sp_icon_adb_cmd);
-                    cr_item.set_title("Open App setting");
+                    cr_item.set_title("OADB Command");
                     cr_item.set_tip(control_data["cmd"].ToString());
+                }
+
+                if(control_data["type"].ToString()==CONTROL_ADB_TYPE.forced_stop.ToString()){
+                    cr_item.set_icon_white(this.sp_icon_forced_stop);
+                    cr_item.set_title("Forced stop");
+                    cr_item.set_tip(control_data["id_app"].ToString());
                 }
 
                 cr_item.check_type();
@@ -632,22 +638,42 @@ public class ADB_Editor : MonoBehaviour
             });
         }
 
-        
         if(type==CONTROL_ADB_TYPE.adb_cmd){
             this.box.set_icon(this.sp_icon_adb_cmd);
             if(index==-1)
                 this.box.set_title("Add ADB Command");
             else
                 this.box.set_title("Update ADB Command");
-            Carrot.Carrot_Box_Item inp_cmd=this.box.create_item("inp_cmd");
+            Carrot_Box_Item inp_cmd=this.box.create_item("inp_cmd");
             inp_cmd.set_title("ADB Command Line");
             inp_cmd.set_tip("Add custom ADB command line");
             inp_cmd.set_icon(this.app.cr.icon_carrot_write);
-            inp_cmd.set_type(Carrot.Box_Item_Type.box_value_input);
+            inp_cmd.set_type(Box_Item_Type.box_value_input);
             if(data_control["cmd"]!=null) inp_cmd.set_val(data_control["cmd"].ToString());
 
             btn_Panel=Frm_editor_btn_done(()=>{
                 data_control["cmd"]=inp_cmd.get_val();
+                if(is_insert){
+                    this.list_command.Insert(index+1,data_control);
+                }else{
+                    if(index!=-1)
+                        this.list_command[index]=data_control;
+                    else
+                        this.list_command.Add(data_control);
+                }
+            });
+        }
+
+        if(type==CONTROL_ADB_TYPE.forced_stop){
+            this.box.set_icon(this.sp_icon_forced_stop);
+            if(index==-1)
+                this.box.set_title("Add Forced Stop App");
+            else
+                this.box.set_title("Update Forced Stop App");
+            Carrot_Box_Item inp_id_app=this.Add_field_id_app();
+            if(data_control["id_app"]!=null) inp_id_app.set_val(data_control["id_app"].ToString());
+            btn_Panel=Frm_editor_btn_done(()=>{
+                data_control["id_app"]=inp_id_app.get_val();
                 if(is_insert){
                     this.list_command.Insert(index+1,data_control);
                 }else{

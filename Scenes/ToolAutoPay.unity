@@ -6574,6 +6574,7 @@ MonoBehaviour:
   apcd: {fileID: 1667508235}
   devices_manager: {fileID: 1667508236}
   apps: {fileID: 1667508237}
+  excel: {fileID: 1667508238}
   tr_all_item: {fileID: 1753495666}
   tr_all_item_right: {fileID: 600945953}
   txt_status_app: {fileID: 486109017}
@@ -6700,6 +6701,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d22171b07b97224397894813d3a9ebf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  app: {fileID: 1667508230}
 --- !u!1 &1739248859
 GameObject:
   m_ObjectHideFlags: 0

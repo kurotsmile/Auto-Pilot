@@ -17,6 +17,7 @@ public class App : MonoBehaviour
     public App_Python_Chrome_Driver apcd;
     public Devices_Manager devices_manager;
     public App_Manager apps;
+    public Excel_Data excel;
 
     [Header("UI")]
     public Transform tr_all_item;
@@ -154,6 +155,9 @@ public class App : MonoBehaviour
         item_file_excel.set_title("Import Excel csv");
         item_file_excel.set_tip("Import data to run automatically from excel file");
         item_file_excel.set_icon_white(this.sp_icon_excel_file);
+        item_file_excel.set_act(()=>{
+            this.excel.Open_file();
+        });
 
         Carrot_Box_Item item_file_text=this.Add_item_main();
         item_file_text.set_icon_white(this.sp_icon_text_file);
