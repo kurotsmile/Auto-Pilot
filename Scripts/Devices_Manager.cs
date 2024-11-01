@@ -61,7 +61,7 @@ public class Devices_Manager : MonoBehaviour
                     btn_get_all_app.set_color(this.app.cr.color_highlight);
                     btn_get_all_app.set_act(()=>{
                         this.app.adb.GetInstalledApps(id_device,datas=>{
-                            this.app.adb_tasks.On_Show(datas);
+                            this.app.adb_tasks.On_Show(this.app.adb_tasks.Fomat_col_item_list_app(datas));
                             box_devices.close();
                             this.Set_One_Device(id_device);
                         });

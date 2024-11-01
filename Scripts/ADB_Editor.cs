@@ -227,8 +227,6 @@ public class ADB_Editor : MonoBehaviour
     }
 
     private void Delete_method(int index){
-        Debug.Log("Index del:"+index);
-        this.list_command.RemoveAt(index);
         PlayerPrefs.DeleteKey("m_"+index+"_data");
         PlayerPrefs.DeleteKey("m_"+index+"_name");
         this.Update_list_ui_Method_right_menu();

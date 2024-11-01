@@ -29,7 +29,7 @@ public class ADB_List_task : MonoBehaviour
         this.On_Show();
     }
 
-    public void On_Show(List<string> list_task_app=null){
+    public void On_Show(IList list_task_app=null){
         this.panel_btn.SetActive(true);
         this.Update_ui_btn_play();
         this.app.adb_editor.Update_list_ui_Method_right_menu();
@@ -184,15 +184,18 @@ public class ADB_List_task : MonoBehaviour
         }
 
         this.app.adb.GetInstalledApps(this.app.devices_manager.list_id_devices[0].ToString(),apps=>{
-            IList list_app=(IList) Json.Deserialize("[]");
-            for(int i=0;i<apps.Count;i++){
-                IList list_col=(IList) Json.Deserialize("[]");
-                list_col.Add(apps[i]);
-                list_app.Add(Json.Serialize(list_col));
-            }
-            this.list_task=list_app;
-            Debug.Log(Json.Serialize(this.list_task));
+            this.list_task=this.Fomat_col_item_list_app(apps);
             this.Update_list_task_ui();
         });
+    }
+
+    public IList Fomat_col_item_list_app(List<string> apps){
+        IList list_app=(IList) Json.Deserialize("[]");
+        for(int i=0;i<apps.Count;i++){
+            IList list_col=(IList) Json.Deserialize("[]");
+            list_col.Add(apps[i]);
+            list_app.Add(Json.Serialize(list_col));
+        }
+        return list_app;
     }
 }
