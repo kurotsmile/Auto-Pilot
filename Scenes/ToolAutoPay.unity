@@ -6513,7 +6513,6 @@ GameObject:
   - component: {fileID: 1667508229}
   - component: {fileID: 1667508230}
   - component: {fileID: 1667508231}
-  - component: {fileID: 1667508232}
   - component: {fileID: 1667508233}
   - component: {fileID: 1667508234}
   - component: {fileID: 1667508235}
@@ -6602,20 +6601,6 @@ MonoBehaviour:
   app: {fileID: 1667508230}
   is_memu: 0
   slider_process_length: {fileID: 2083602589}
---- !u!114 &1667508232
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1667508228}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7090313dd8cbb5546a87e371daa14f94, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  app: {fileID: 1667508230}
-  bank_items: []
 --- !u!114 &1667508233
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6640,6 +6625,7 @@ MonoBehaviour:
   sp_icon_swipe: {fileID: 21300000, guid: 503df9e4e04583c4883aacc24f444269, type: 3}
   sp_icon_stop_all: {fileID: 21300000, guid: e2518a55c99a7da4e917441c26cdd95e, type: 3}
   sp_icon_inster_after: {fileID: 21300000, guid: 7a8caf6a0a7374b46a251c02ec513745, type: 3}
+  sp_icon_adb_cmd: {fileID: 21300000, guid: 2cce996c418c6e34c861d7efff7a13c4, type: 3}
 --- !u!114 &1667508234
 MonoBehaviour:
   m_ObjectHideFlags: 0

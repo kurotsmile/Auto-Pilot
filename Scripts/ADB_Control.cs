@@ -59,16 +59,18 @@ public class ADB_Control : MonoBehaviour
                 }
                 IDictionary data_item=(IDictionary) this.list_command[this.index_comand_cur];
 
-                if(data_item["type"].ToString()=="mouse_click") this.On_Mouse_Click(data_item["x"].ToString(),data_item["y"].ToString());
-                if(data_item["type"].ToString()=="waiting"){
+                if(data_item["type"].ToString()==CONTROL_ADB_TYPE.mouse_click.ToString()) this.On_Mouse_Click(data_item["x"].ToString(),data_item["y"].ToString());
+                if(data_item["type"].ToString()==CONTROL_ADB_TYPE.waiting.ToString()){
                     this.timer_step_waiting=int.Parse(data_item["timer"].ToString());
                     this.is_timer_waiting=true;
                 }
 
-                if(data_item["type"].ToString()=="send_text") this.On_Send_Text(data_item["text"].ToString());
-                if(data_item["type"].ToString()=="open_app") this.On_Open_App(data_item["id_app"].ToString());
-                if(data_item["type"].ToString()=="close_app") this.On_Stop_App(data_item["id_app"].ToString());
-                if(data_item["type"].ToString()=="swipe") this.On_Swipe(data_item["x1"].ToString(),data_item["y1"].ToString(),data_item["x2"].ToString(),data_item["y2"].ToString(),int.Parse(data_item["timer"].ToString()));
+                if(data_item["type"].ToString()==CONTROL_ADB_TYPE.send_text.ToString()) this.On_Send_Text(data_item["text"].ToString());
+                if(data_item["type"].ToString()==CONTROL_ADB_TYPE.open_app.ToString()) this.On_Open_App(data_item["id_app"].ToString());
+                if(data_item["type"].ToString()==CONTROL_ADB_TYPE.close_app.ToString()) this.On_Stop_App(data_item["id_app"].ToString());
+                if(data_item["type"].ToString()==CONTROL_ADB_TYPE.swipe.ToString()) this.On_Swipe(data_item["x1"].ToString(),data_item["y1"].ToString(),data_item["x2"].ToString(),data_item["y2"].ToString(),int.Parse(data_item["timer"].ToString()));
+                if(data_item["type"].ToString()==CONTROL_ADB_TYPE.open_app_setting.ToString()) this.Open_Setting_App(data_item["id_app"].ToString());
+                if(data_item["type"].ToString()==CONTROL_ADB_TYPE.adb_cmd.ToString()) this.RunADBCommand_All_Device(data_item["cmd"].ToString());
 
                 this.slider_process_length.value=(this.index_comand_cur+1);
                 this.index_comand_cur++;
@@ -269,6 +271,14 @@ public class ADB_Control : MonoBehaviour
 
     public void Open_Setting_App(string id_app){
         this.RunADBCommand_All_Device("shell am start -a android.settings.APPLICATION_DETAILS_SETTINGS -d package:"+id_app);
+    }
+
+    public void Clear_Data_App(string id_app){
+        this.RunADBCommand_All_Device("shell pm clear "+id_app);
+    }
+
+    public void Force_Stop_App(string id_app){
+        this.RunADBCommand_All_Device("shell am force-stop "+id_app);
     }
 
     public void RunADBCommand_One_Device(string id_device,string s_command,UnityAction<string> act_done){
