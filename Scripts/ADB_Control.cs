@@ -244,11 +244,11 @@ public class ADB_Control : MonoBehaviour
         Act_done?.Invoke(deviceList);
     }
 
-    public void GetInstalledApps(string deviceSerial = null,UnityAction<List<string>> action_done=null)
+    public void GetInstalledApps(string deviceSerial = null,UnityAction<List<string>> action_done=null,string arg_app_type="")
     {
         string adbCommand = deviceSerial == null 
-            ? "adb shell pm list packages"
-            : $"adb -s {deviceSerial} shell pm list packages";
+            ? "adb shell pm list packages "+arg_app_type
+            : $"adb -s {deviceSerial} shell pm list packages "+arg_app_type;
 
         this.RunADBCommand(adbCommand,s_list=>{
             string[] lines = s_list.Split('\n');

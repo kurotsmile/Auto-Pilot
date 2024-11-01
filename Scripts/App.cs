@@ -16,6 +16,7 @@ public class App : MonoBehaviour
     public GameObject item_box_prefab;
     public App_Python_Chrome_Driver apcd;
     public Devices_Manager devices_manager;
+    public App_Manager apps;
 
     [Header("UI")]
     public Transform tr_all_item;
@@ -36,6 +37,8 @@ public class App : MonoBehaviour
     public Sprite sp_icon_text_file;
     public Sprite  sp_icon_devices;
     public Sprite  sp_icon_app_setting;
+    public Sprite  sp_icon_app_user;
+    public Sprite  sp_icon_app_system;
 
     private bool is_play_simulador=false;
     private bool is_mode_web=true;

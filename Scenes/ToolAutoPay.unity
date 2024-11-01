@@ -863,7 +863,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.6698113, g: 0.19355439, b: 0, a: 1}
+  m_Color: {r: 0.34117648, g: 0.44313726, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2191,7 +2191,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.6698113, g: 0.19355439, b: 0, a: 1}
+  m_Color: {r: 0.34117648, g: 0.44313726, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -4021,7 +4021,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.6698113, g: 0.19355439, b: 0, a: 1}
+  m_Color: {r: 0.34117648, g: 0.44313726, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -4976,7 +4976,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.6698113, g: 0.19355439, b: 0, a: 1}
+  m_Color: {r: 0.34117648, g: 0.44313726, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -6454,7 +6454,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1667508234}
         m_TargetAssemblyTypeName: ADB_List_task, Assembly-CSharp
-        m_MethodName: On_Show
+        m_MethodName: Show
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6477,7 +6477,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.6698113, g: 0.19355439, b: 0, a: 1}
+  m_Color: {r: 0.34117648, g: 0.44313726, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -6517,6 +6517,8 @@ GameObject:
   - component: {fileID: 1667508234}
   - component: {fileID: 1667508235}
   - component: {fileID: 1667508236}
+  - component: {fileID: 1667508237}
+  - component: {fileID: 1667508238}
   m_Layer: 0
   m_Name: app
   m_TagString: Untagged
@@ -6571,6 +6573,7 @@ MonoBehaviour:
   item_box_prefab: {fileID: 346399769378897854, guid: 5c76e0e7f1ec6f749989da9d070de244, type: 3}
   apcd: {fileID: 1667508235}
   devices_manager: {fileID: 1667508236}
+  apps: {fileID: 1667508237}
   tr_all_item: {fileID: 1753495666}
   tr_all_item_right: {fileID: 600945953}
   txt_status_app: {fileID: 486109017}
@@ -6586,6 +6589,8 @@ MonoBehaviour:
   sp_icon_text_file: {fileID: 21300000, guid: 9f78924f24ffc284f9c0c7e97c0078c7, type: 3}
   sp_icon_devices: {fileID: 21300000, guid: e7b31681ea9c1be49bf70eb4f55d21ce, type: 3}
   sp_icon_app_setting: {fileID: 21300000, guid: 20db880507d35dc4281aa788c7c1bcd4, type: 3}
+  sp_icon_app_user: {fileID: 21300000, guid: d667ccf8684248c4596246fca3dc1a31, type: 3}
+  sp_icon_app_system: {fileID: 21300000, guid: d975dcfce2a23764986da5e8a1971c1b, type: 3}
 --- !u!114 &1667508231
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6668,6 +6673,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   app: {fileID: 1667508230}
   list_id_devices: []
+--- !u!114 &1667508237
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1667508228}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 069f6298f472eba43b24825fdd48fa20, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  app: {fileID: 1667508230}
+--- !u!114 &1667508238
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1667508228}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d22171b07b97224397894813d3a9ebf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1739248859
 GameObject:
   m_ObjectHideFlags: 0

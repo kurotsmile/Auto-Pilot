@@ -42,17 +42,28 @@ public class Devices_Manager : MonoBehaviour
             for(int i=0;i<list_device.Count;i++){
                 if(list_device[i].Trim()!="List of devices attached"){
                     var index=i;
+                    var id_device=list_device[i];
                     Carrot_Box_Item device_item=box_devices.create_item("item_device");
                     device_item.set_title(list_device[i]);
                     device_item.set_tip("Device Android");
                     device_item.set_icon(this.app.cr.icon_carrot_app);
+
+                    Carrot_Box_Btn_Item btn_get_all_app=device_item.create_item();
+                    btn_get_all_app.set_icon(this.app.cr.icon_carrot_advanced);
+                    btn_get_all_app.set_icon_color(Color.white);
+                    btn_get_all_app.set_color(this.app.cr.color_highlight);
+                    btn_get_all_app.set_act(()=>{
+                        this.app.adb.GetInstalledApps(id_device,datas=>{
+                            this.app.adb_tasks.On_Show(datas);
+                            box_devices.close();
+                        });
+                    });
 
                     Carrot_Box_Btn_Item btn_sel=device_item.create_item();
                     btn_sel.set_icon(this.app.cr.icon_carrot_done);
                     btn_sel.set_icon_color(Color.white);
                     btn_sel.set_color(this.app.cr.color_highlight);
                     btn_sel.set_act(()=>{
-                        
                         if(list_select[index]){
                             list_select[index]=false;
                             btn_sel.set_icon(this.app.cr.icon_carrot_cancel);
@@ -97,21 +108,5 @@ public class Devices_Manager : MonoBehaviour
         }else{
             return true;
         }
-    }
-
-    public void Get_list_app(){
-        this.app.adb.GetInstalledApps(this.list_id_devices[0],datas=>{
-            if(this.box!=null) this.box.close();
-            this.box=this.app.cr.Create_Box();
-            this.box.set_icon(this.app.cr.icon_carrot_database);
-            this.box.set_title("List Application");
-            for(int i=0;i<datas.Count;i++){
-                Carrot_Box_Item box_item_app=this.box.create_item("item_app");
-                box_item_app.set_title("App "+i);
-                box_item_app.set_tip(datas[i]);
-                box.set_icon(this.app.cr.icon_carrot_app);
-            }
-            this.app.cr.Show_msg(datas.ToString());
-        });
     }
 }

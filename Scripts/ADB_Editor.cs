@@ -363,13 +363,30 @@ public class ADB_Editor : MonoBehaviour
         }
     }
 
-    private Carrot_Box_Item Add_field_number(string s_title,string s_tip){
-        Carrot.Carrot_Box_Item inp_number=this.box.create_item("inp_x");
+    private Carrot_Box_Item Add_field_position(string s_title,string s_tip){
+        Carrot.Carrot_Box_Item inp_number=this.box.create_item("inp_pos");
         inp_number.set_title(s_title);
         inp_number.set_tip(s_tip);
         inp_number.set_icon(this.app.cr.icon_carrot_write);
         inp_number.set_type(Carrot.Box_Item_Type.box_number_input);
         return inp_number;
+    }
+
+    private Carrot_Box_Item Add_field_id_app(){
+        Carrot_Box_Item inp_app_id=this.box.create_item("inp_app_id");
+        inp_app_id.set_title("Application Package Name (Application ID)");
+        inp_app_id.set_tip("Enter the app bundle id name or select from the list");
+        inp_app_id.set_icon(this.app.cr.icon_carrot_write);
+        inp_app_id.set_type(Carrot.Box_Item_Type.box_value_input);
+
+        Carrot_Box_Btn_Item btn_sel_app=inp_app_id.create_item();
+        btn_sel_app.set_icon(app.cr.icon_carrot_app);
+        btn_sel_app.set_act(()=>{
+            this.app.apps.Show_Select_App_Id(id_app=>{
+                inp_app_id.set_val(id_app);
+            });
+        });
+        return inp_app_id;
     }
 
     private Carrot_Box_Item Add_field_tip(){
@@ -404,13 +421,13 @@ public class ADB_Editor : MonoBehaviour
                 this.box.set_title("Add Mouse Click");
             else
                 this.box.set_title("Update Mouse Click");
-            Carrot_Box_Item inp_x=this.Add_field_number("Position x","Position x mouse and tap");
+            Carrot_Box_Item inp_x=this.Add_field_position("Position x","Position x mouse and tap");
             if(data_control["x"]!=null)
                 inp_x.set_val(data_control["x"].ToString());
             else
                 inp_x.set_val("0");
 
-            Carrot_Box_Item inp_y=this.Add_field_number("Position y","Position y mouse and tap");
+            Carrot_Box_Item inp_y=this.Add_field_position("Position y","Position y mouse and tap");
             if(data_control["y"]!=null)
                 inp_y.set_val(data_control["y"].ToString());
             else
@@ -442,11 +459,8 @@ public class ADB_Editor : MonoBehaviour
                 this.box.set_title("Add Open App");
             else
                 this.box.set_title("Update Open App");
-            Carrot.Carrot_Box_Item inp_id_app=this.box.create_item("id_app");
-            inp_id_app.set_title("Application Package Name (Application ID)");
-            inp_id_app.set_tip("Enter the application name and main startup function");
-            inp_id_app.set_icon(this.app.cr.icon_carrot_write);
-            inp_id_app.set_type(Carrot.Box_Item_Type.box_value_input);
+
+            Carrot_Box_Item inp_id_app=Add_field_id_app();
             if(data_control["id_app"]!=null) inp_id_app.set_val(data_control["id_app"].ToString());
 
             btn_Panel=Frm_editor_btn_done(()=>{
@@ -471,11 +485,7 @@ public class ADB_Editor : MonoBehaviour
                 this.box.set_title("Add Close App");
             else
                 this.box.set_title("Update Close App");
-            Carrot.Carrot_Box_Item inp_id_app=this.box.create_item("id_app");
-            inp_id_app.set_title("Application Package Name (Application ID)");
-            inp_id_app.set_tip("Enter the application name and main closeup function");
-            inp_id_app.set_icon(this.app.cr.icon_carrot_write);
-            inp_id_app.set_type(Carrot.Box_Item_Type.box_value_input);
+            Carrot_Box_Item inp_id_app=Add_field_id_app();
             if(data_control["id_app"]!=null) inp_id_app.set_val(data_control["id_app"].ToString());
 
             btn_Panel=Frm_editor_btn_done(()=>{
@@ -559,31 +569,31 @@ public class ADB_Editor : MonoBehaviour
             else
                 this.box.set_title("Update Swipe");
 
-            Carrot_Box_Item inp_x1=this.Add_field_number("Position x1","Position x1 mouse and tap");
+            Carrot_Box_Item inp_x1=this.Add_field_position("Position x1","Position x1 mouse and tap");
             if(data_control["x1"]!=null)
                 inp_x1.set_val(data_control["x1"].ToString());
             else
                 inp_x1.set_val("0");
 
-            Carrot_Box_Item inp_y1=this.Add_field_number("Position y1","Position y1 mouse and tap");
+            Carrot_Box_Item inp_y1=this.Add_field_position("Position y1","Position y1 mouse and tap");
             if(data_control["y1"]!=null)
                 inp_y1.set_val(data_control["y1"].ToString());
             else
                 inp_y1.set_val("0");
 
-            Carrot_Box_Item inp_x2=this.Add_field_number("Position x2","Position x2 mouse and tap");
+            Carrot_Box_Item inp_x2=this.Add_field_position("Position x2","Position x2 mouse and tap");
             if(data_control["x2"]!=null)
                 inp_x2.set_val(data_control["x2"].ToString());
             else
                 inp_x2.set_val("0");
 
-            Carrot_Box_Item inp_y2=this.Add_field_number("Position y2","Position y2 mouse and tap");
+            Carrot_Box_Item inp_y2=this.Add_field_position("Position y2","Position y2 mouse and tap");
             if(data_control["y2"]!=null)
                 inp_y2.set_val(data_control["y2"].ToString());
             else
                 inp_y2.set_val("0");
 
-            Carrot_Box_Item inp_timer_ms=this.Add_field_number("Timer ms","Time to perform the operation");
+            Carrot_Box_Item inp_timer_ms=this.Add_field_position("Timer ms","Time to perform the operation");
             if(data_control["timer"]!=null)
                 inp_timer_ms.set_val(data_control["timer"].ToString());
             else
@@ -617,11 +627,7 @@ public class ADB_Editor : MonoBehaviour
                 this.box.set_title("Add open app setting");
             else
                 this.box.set_title("Update open app setting");
-            Carrot.Carrot_Box_Item inp_id_app=this.box.create_item("id_app");
-            inp_id_app.set_title("Application Package Name (Application ID)");
-            inp_id_app.set_tip("Enter the application ID to open app setting");
-            inp_id_app.set_icon(this.app.cr.icon_carrot_write);
-            inp_id_app.set_type(Carrot.Box_Item_Type.box_value_input);
+            Carrot_Box_Item inp_id_app=Add_field_id_app();
             if(data_control["id_app"]!=null) inp_id_app.set_val(data_control["id_app"].ToString());
 
             btn_Panel=Frm_editor_btn_done(()=>{

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Carrot;
 using SimpleFileBrowser;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -24,13 +25,22 @@ public class ADB_List_task : MonoBehaviour
         this.panel_btn.SetActive(false);
     }
 
-    public void On_Show(){
+    public void Show(){
+        this.On_Show();
+    }
+
+    public void On_Show(List<string> list_task_app=null){
         this.panel_btn.SetActive(true);
         this.Update_ui_btn_play();
         this.app.adb_editor.Update_list_ui_Method_right_menu();
-        if(PlayerPrefs.GetString("s_data_task_temp","")!=""){
-            this.s_data_task_temp= PlayerPrefs.GetString("s_data_task_temp");
-            this.Load_list_by_data(this.s_data_task_temp);
+        if(list_task_app==null){
+            if(PlayerPrefs.GetString("s_data_task_temp","")!=""){
+                this.s_data_task_temp= PlayerPrefs.GetString("s_data_task_temp");
+                this.Load_list_by_data(this.s_data_task_temp);
+            }
+        }else{
+            this.list_task=list_task_app;
+            this.Update_list_task_ui();
         }
     }
 
@@ -184,6 +194,11 @@ public class ADB_List_task : MonoBehaviour
     }
 
     public void Show_List_App(){
+        if(this.app.devices_manager.list_id_devices.Count==0){
+            this.app.cr.Show_msg("List Devices","No devices found!",Msg_Icon.Alert);
+            return;
+        }
+
         this.app.adb.GetInstalledApps(this.app.devices_manager.list_id_devices[0],apps=>{
             this.list_task=apps;
             this.Update_list_task_ui();
