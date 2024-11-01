@@ -1,19 +1,13 @@
 fileFormatVersion: 2
-guid: a333219438830224a8c36bf99744ebb5
+guid: 6934e8b593aaedc4eb1b2261974d4118
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 7124602051836237273
-    second: all_app_0
+      213: 7227154924011140140
+    second: forced_stop_app_0
   - first:
-      213: -7051040600909302374
-    second: all_app_1
-  - first:
-      213: 7059734140954023766
-    second: all_app_2
-  - first:
-      213: 2592171937217536048
-    second: all_app_3
+      213: -8647755857381118652
+    second: forced_stop_app_1
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -148,13 +142,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: all_app_0
+      name: forced_stop_app_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 33
-        width: 31
-        height: 31
+        x: 12
+        y: 1
+        width: 40
+        height: 62
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -163,20 +157,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 9d5d7b181dbafd260800000000000000
-      internalID: 7124602051836237273
+      spriteID: c24366ebc130c4460800000000000000
+      internalID: 7227154924011140140
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: all_app_1
+      name: forced_stop_app_1
       rect:
         serializedVersion: 2
-        x: 33
-        y: 33
-        width: 31
-        height: 31
+        x: 36
+        y: 20
+        width: 24
+        height: 24
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -185,52 +179,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: a95b1f57eeba52e90800000000000000
-      internalID: -7051040600909302374
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: all_app_2
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 0
-        width: 31
-        height: 31
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 65713401cc639f160800000000000000
-      internalID: 7059734140954023766
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: all_app_3
-      rect:
-        serializedVersion: 2
-        x: 33
-        y: 0
-        width: 31
-        height: 31
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 030669a94ae39f320800000000000000
-      internalID: 2592171937217536048
+      spriteID: 44dae709ddffcf780800000000000000
+      internalID: -8647755857381118652
       vertices: []
       indices: 
       edges: []
@@ -249,10 +199,8 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      all_app_0: 7124602051836237273
-      all_app_1: -7051040600909302374
-      all_app_2: 7059734140954023766
-      all_app_3: 2592171937217536048
+      forced_stop_app_0: 7227154924011140140
+      forced_stop_app_1: -8647755857381118652
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

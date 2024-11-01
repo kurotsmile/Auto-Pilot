@@ -6591,6 +6591,7 @@ MonoBehaviour:
   sp_icon_app_setting: {fileID: 21300000, guid: 20db880507d35dc4281aa788c7c1bcd4, type: 3}
   sp_icon_app_user: {fileID: 21300000, guid: d667ccf8684248c4596246fca3dc1a31, type: 3}
   sp_icon_app_system: {fileID: 21300000, guid: d975dcfce2a23764986da5e8a1971c1b, type: 3}
+  sp_icon_get_all_app: {fileID: 21300000, guid: a333219438830224a8c36bf99744ebb5, type: 3}
 --- !u!114 &1667508231
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6631,6 +6632,7 @@ MonoBehaviour:
   sp_icon_stop_all: {fileID: 21300000, guid: e2518a55c99a7da4e917441c26cdd95e, type: 3}
   sp_icon_inster_after: {fileID: 21300000, guid: 7a8caf6a0a7374b46a251c02ec513745, type: 3}
   sp_icon_adb_cmd: {fileID: 21300000, guid: 2cce996c418c6e34c861d7efff7a13c4, type: 3}
+  sp_icon_forced_stop: {fileID: 21300000, guid: 6934e8b593aaedc4eb1b2261974d4118, type: 3}
 --- !u!114 &1667508234
 MonoBehaviour:
   m_ObjectHideFlags: 0

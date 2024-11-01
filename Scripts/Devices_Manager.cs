@@ -49,13 +49,14 @@ public class Devices_Manager : MonoBehaviour
                     device_item.set_icon(this.app.cr.icon_carrot_app);
 
                     Carrot_Box_Btn_Item btn_get_all_app=device_item.create_item();
-                    btn_get_all_app.set_icon(this.app.cr.icon_carrot_advanced);
+                    btn_get_all_app.set_icon(this.app.sp_icon_get_all_app);
                     btn_get_all_app.set_icon_color(Color.white);
                     btn_get_all_app.set_color(this.app.cr.color_highlight);
                     btn_get_all_app.set_act(()=>{
                         this.app.adb.GetInstalledApps(id_device,datas=>{
                             this.app.adb_tasks.On_Show(datas);
                             box_devices.close();
+                            this.Set_One_Device(id_device);
                         });
                     });
 
@@ -108,5 +109,11 @@ public class Devices_Manager : MonoBehaviour
         }else{
             return true;
         }
+    }
+
+    private void Set_One_Device(string id_main_device){
+        List<string> list_one=new();
+        list_one.Add(id_main_device);
+        this.list_id_devices=list_one;
     }
 }

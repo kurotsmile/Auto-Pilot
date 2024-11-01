@@ -16,7 +16,8 @@ public enum CONTROL_ADB_TYPE{
     waiting,
     swipe,
     open_app_setting,
-    adb_cmd
+    adb_cmd,
+    forced_stop
 }
 
 public enum CONTROL_WEB_TYPE{
@@ -46,6 +47,7 @@ public class ADB_Editor : MonoBehaviour
     public Sprite sp_icon_stop_all;
     public Sprite sp_icon_inster_after;
     public Sprite sp_icon_adb_cmd;
+    public Sprite sp_icon_forced_stop;
 
     private IList list_command;
 
@@ -157,6 +159,13 @@ public class ADB_Editor : MonoBehaviour
                 this.Show_edit_control(index_insert,CONTROL_ADB_TYPE.adb_cmd,true);
             else
                 this.Show_edit_control(-1,CONTROL_ADB_TYPE.adb_cmd);
+        });
+
+        this.app.Add_Item_Right("Forced stop","Force stop background apps",this.sp_icon_forced_stop,tr_father).set_act(()=>{
+            if(index_insert!=-1)
+                this.Show_edit_control(index_insert,CONTROL_ADB_TYPE.forced_stop,true);
+            else
+                this.Show_edit_control(-1,CONTROL_ADB_TYPE.forced_stop);
         });
 
         this.app.Add_Item_Right("Stop all applications","Stop all user applications excluding system applications",this.sp_icon_stop_all,tr_father).set_act(()=>{
@@ -325,6 +334,7 @@ public class ADB_Editor : MonoBehaviour
                     if(control_data["type"].ToString()==CONTROL_ADB_TYPE.swipe.ToString())  this.app.adb.On_Swipe(control_data["x1"].ToString(),control_data["y1"].ToString(),control_data["x2"].ToString(),control_data["y2"].ToString(),int.Parse(control_data["timer"].ToString()));
                     if(control_data["type"].ToString()==CONTROL_ADB_TYPE.open_app_setting.ToString()) this.app.adb.Open_Setting_App(control_data["id_app"].ToString());
                     if(control_data["type"].ToString()==CONTROL_ADB_TYPE.adb_cmd.ToString()) this.app.adb.RunADBCommand_All_Device(control_data["cmd"].ToString());
+                    if(control_data["type"].ToString()==CONTROL_ADB_TYPE.forced_stop.ToString()) this.app.adb.Force_Stop_App(control_data["id_app"].ToString());
                 });
 
                 Carrot_Box_Btn_Item btn_inster=cr_item.create_item();
@@ -349,6 +359,7 @@ public class ADB_Editor : MonoBehaviour
                         if(control_data["type"].ToString()==CONTROL_ADB_TYPE.swipe.ToString()) this.Show_edit_control(index,CONTROL_ADB_TYPE.swipe);
                         if(control_data["type"].ToString()==CONTROL_ADB_TYPE.open_app_setting.ToString()) this.Show_edit_control(index,CONTROL_ADB_TYPE.open_app_setting);
                         if(control_data["type"].ToString()==CONTROL_ADB_TYPE.adb_cmd.ToString()) this.Show_edit_control(index,CONTROL_ADB_TYPE.adb_cmd);
+                        if(control_data["type"].ToString()==CONTROL_ADB_TYPE.forced_stop.ToString()) this.Show_edit_control(index,CONTROL_ADB_TYPE.forced_stop);
                     });
                 }
 
@@ -446,10 +457,6 @@ public class ADB_Editor : MonoBehaviour
                     else
                         this.list_command.Add(data_control);
                 }
-
-                this.box.close();
-                this.app.cr.play_sound_click();
-                this.Update_list_ui();
             });
         }
 
@@ -473,9 +480,6 @@ public class ADB_Editor : MonoBehaviour
                     else
                         this.list_command.Add(data_control);
                 }
-                this.box.close();
-                this.app.cr.play_sound_click();
-                this.Update_list_ui();
             });
         }
 
@@ -498,9 +502,6 @@ public class ADB_Editor : MonoBehaviour
                     else
                         this.list_command.Add(data_control);
                 }
-                this.box.close();
-                this.app.cr.play_sound_click();
-                this.Update_list_ui();
             });
         }
 
@@ -527,9 +528,6 @@ public class ADB_Editor : MonoBehaviour
                     else
                         this.list_command.Add(data_control);
                 }
-                this.box.close();
-                this.app.cr.play_sound_click();
-                this.Update_list_ui();
             });
         }
 
@@ -556,9 +554,6 @@ public class ADB_Editor : MonoBehaviour
                     else
                         this.list_command.Add(data_control);
                 }
-                this.box.close();
-                this.app.cr.play_sound_click();
-                this.Update_list_ui();
             });
         }
 
@@ -588,10 +583,7 @@ public class ADB_Editor : MonoBehaviour
                 inp_x2.set_val("0");
 
             Carrot_Box_Item inp_y2=this.Add_field_position("Position y2","Position y2 mouse and tap");
-            if(data_control["y2"]!=null)
-                inp_y2.set_val(data_control["y2"].ToString());
-            else
-                inp_y2.set_val("0");
+            if(data_control["y2"]!=null) inp_y2.set_val(data_control["y2"].ToString()); else inp_y2.set_val("0");
 
             Carrot_Box_Item inp_timer_ms=this.Add_field_position("Timer ms","Time to perform the operation");
             if(data_control["timer"]!=null)
@@ -615,9 +607,6 @@ public class ADB_Editor : MonoBehaviour
                     else
                         this.list_command.Add(data_control);
                 }
-                this.box.close();
-                this.app.cr.play_sound_click();
-                this.Update_list_ui();
             });
         }
 
@@ -640,9 +629,6 @@ public class ADB_Editor : MonoBehaviour
                     else
                         this.list_command.Add(data_control);
                 }
-                this.box.close();
-                this.app.cr.play_sound_click();
-                this.Update_list_ui();
             });
         }
 
@@ -670,9 +656,6 @@ public class ADB_Editor : MonoBehaviour
                     else
                         this.list_command.Add(data_control);
                 }
-                this.box.close();
-                this.app.cr.play_sound_click();
-                this.Update_list_ui();
             });
         }
 
@@ -687,14 +670,19 @@ public class ADB_Editor : MonoBehaviour
         });
     }
 
-    private Carrot_Box_Btn_Panel Frm_editor_btn_done(UnityAction act_click){
+    private Carrot_Box_Btn_Panel Frm_editor_btn_done(UnityAction act_click=null){
         Carrot_Box_Btn_Panel btn_Panel=this.box.create_panel_btn();
         Carrot_Button_Item btn_done=btn_Panel.create_btn("btn_done");
         btn_done.set_bk_color(this.app.cr.color_highlight);
         btn_done.set_label("Done");
         btn_done.set_label_color(Color.white);
         btn_done.set_icon_white(this.app.cr.icon_carrot_done);
-        btn_done.set_act_click(act_click);
+        btn_done.set_act_click(()=>{
+            act_click?.Invoke();
+            this.box.close();
+            this.app.cr.play_sound_click();
+            this.Update_list_ui();
+        });
         return btn_Panel;
     }
 
