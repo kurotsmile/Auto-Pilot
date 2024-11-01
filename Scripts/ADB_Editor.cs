@@ -36,6 +36,7 @@ public class ADB_Editor : MonoBehaviour
     public GameObject panel_btn;
     public Image img_icon_play;
     public Text txt_play;
+    public GameObject obj_btn_update;
 
     [Header("Asset")]
     public Sprite sp_icon_mouse;
@@ -57,7 +58,8 @@ public class ADB_Editor : MonoBehaviour
     private int length_method=0;
     private int index_sel_method=0;
     private UnityAction act_close=null;
-
+    private int index_edit=-1;
+    
     public void On_Load(){
         this.panel_btn.SetActive(false);
         this.length_method=PlayerPrefs.GetInt("length_method",0);
@@ -67,7 +69,12 @@ public class ADB_Editor : MonoBehaviour
         }
     }
 
-    public void Show_Editor(){
+    public void Show(){
+        this.Show_Editor();
+    }
+
+    public void Show_Editor(int index_update=-1){
+        this.index_edit=index_update;
         this.list_command=(IList) Carrot.Json.Deserialize("[]");
         this.app.cr.clear_contain(this.app.tr_all_item);
         this.app.cr.clear_contain(this.app.tr_all_item_right);
@@ -77,6 +84,7 @@ public class ADB_Editor : MonoBehaviour
         else
             this.Load_Menu_Right_App();
         this.panel_btn.SetActive(true);
+        this.Update_btn_ui();
     }
 
     private void Load_Menu_Right_Web(Transform tr_father=null,int index_insert=-1){
@@ -198,7 +206,7 @@ public class ADB_Editor : MonoBehaviour
             btn_edit.set_icon_color(Color.white);
             btn_edit.set_color(this.app.cr.color_highlight);
             btn_edit.set_act(()=>{
-                this.Show_Editor();
+                this.Show_Editor(index);
                 this.list_command= (IList) Carrot.Json.Deserialize(PlayerPrefs.GetString("m_"+index+"_data"));
                 this.Update_list_ui();
             });
@@ -219,6 +227,7 @@ public class ADB_Editor : MonoBehaviour
     }
 
     private void Delete_method(int index){
+        Debug.Log("Index del:"+index);
         this.list_command.RemoveAt(index);
         PlayerPrefs.DeleteKey("m_"+index+"_data");
         PlayerPrefs.DeleteKey("m_"+index+"_name");
@@ -226,6 +235,7 @@ public class ADB_Editor : MonoBehaviour
     }
 
     public void Save_data_json_control(){
+        this.app.file.Set_filter(Carrot_File_Data.JsonData);
         this.app.file.Save_file(paths=>{
             string s_path=paths[0];
             FileBrowserHelpers.WriteTextToFile(s_path,Carrot.Json.Serialize(this.list_command));
@@ -713,6 +723,8 @@ public class ADB_Editor : MonoBehaviour
     }
 
     public void Close_Editor(){
+        this.index_edit=-1;
+        this.obj_btn_update.SetActive(false);
         this.panel_btn.SetActive(false);
         this.app.cr.play_sound_click();
         this.Load_Method_Menu_Right();
@@ -768,5 +780,17 @@ public class ADB_Editor : MonoBehaviour
 
     public void Set_Act_close(UnityAction act){
         this.act_close=act;
+    }
+
+    private void Update_btn_ui(){
+        if(this.index_edit==-1)
+            this.obj_btn_update.SetActive(false);
+        else
+            this.obj_btn_update.SetActive(true);
+    }
+
+    public void On_update_method(){
+        PlayerPrefs.SetString("m_"+this.index_edit+"_data",Json.Serialize(this.list_command));
+        this.app.cr.Show_msg("Update method","Update method successful!",Msg_Icon.Success);
     }
 }
