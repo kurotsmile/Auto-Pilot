@@ -249,7 +249,7 @@ public class ADB_Control : MonoBehaviour
     }
 
     public void RunADBCommand_All_Device(string s_command){
-        for(int i=0;i<this.app.devices_manager.list_id_devices.Count;i++) this.RunADBCommand("adb -s "+this.app.devices_manager.list_id_devices[i]+" "+s_command);
+        for(int i=0;i<this.app.devices_manager.list_id_devices.Count;i++) this.RunADBCommand("adb -s "+this.app.devices_manager.list_id_devices[i].ToString()+" "+s_command);
     }
 
     private string Arg(string s_command){

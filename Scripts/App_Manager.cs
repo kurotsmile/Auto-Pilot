@@ -47,6 +47,12 @@ public class App_Manager : MonoBehaviour
             });
             if(this.type_app_view=="-s") btn_system_type.set_icon_color(this.app.cr.color_highlight);
 
+            Carrot_Box_Btn_Item btn_sel_all=this.box.create_btn_menu_header(this.app.cr.icon_carrot_add,false);
+            btn_sel_all.set_act(()=>{
+                this.app.adb_tasks.On_Show(this.app.adb_tasks.Fomat_col_item_list_app(datas));
+                if(this.box!=null) this.box.close();
+            });
+
             for(int i=0;i<datas.Count;i++){
                 var s_app_id=datas[i];
                 Carrot_Box_Item box_item_app=this.box.create_item("item_app");

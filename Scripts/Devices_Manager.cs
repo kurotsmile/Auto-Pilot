@@ -21,7 +21,11 @@ public class Devices_Manager : MonoBehaviour
         this.Update_Ui();
     }
 
-    public void Show_list_devices(){
+    public void Show(){
+        this.Show_list_devices(true);
+    }
+
+    public void Show_list_devices(bool is_select_device=false){
         this.app.adb.ListConnectedDevices(list=>{
 
             List<string> list_device=new();
@@ -54,6 +58,11 @@ public class Devices_Manager : MonoBehaviour
                     device_item.set_title(list_device[i]);
                     device_item.set_tip("Device Android");
                     device_item.set_icon(this.app.cr.icon_carrot_app);
+                    if(is_select_device==false){
+                        device_item.set_act(()=>{
+                            this.app.apps.Show_List_App_By_ID_Device(id_device);
+                        });
+                    }
 
                     Carrot_Box_Btn_Item btn_get_all_app=device_item.create_item();
                     btn_get_all_app.set_icon(this.app.sp_icon_get_all_app);
@@ -67,48 +76,52 @@ public class Devices_Manager : MonoBehaviour
                         });
                     });
 
-                    Carrot_Box_Btn_Item btn_sel=device_item.create_item();
-                    btn_sel.set_icon(this.app.cr.icon_carrot_done);
-                    btn_sel.set_icon_color(Color.white);
-                    btn_sel.set_color(this.app.cr.color_highlight);
-                    btn_sel.set_act(()=>{
-                        if(list_select[index]){
-                            list_select[index]=false;
-                            btn_sel.set_icon(this.app.cr.icon_carrot_cancel);
-                        }else{
-                            list_select[index]=true;
-                            btn_sel.set_icon(this.app.cr.icon_carrot_done);
-                        }
-                    });
+                    if(is_select_device){
+                        Carrot_Box_Btn_Item btn_sel=device_item.create_item();
+                        btn_sel.set_icon(this.app.cr.icon_carrot_done);
+                        btn_sel.set_icon_color(Color.white);
+                        btn_sel.set_color(this.app.cr.color_highlight);
+                        btn_sel.set_act(()=>{
+                            if(list_select[index]){
+                                list_select[index]=false;
+                                btn_sel.set_icon(this.app.cr.icon_carrot_cancel);
+                            }else{
+                                list_select[index]=true;
+                                btn_sel.set_icon(this.app.cr.icon_carrot_done);
+                            }
+                        });
+                    }
                 }
             }
 
-            Carrot_Box_Btn_Panel btn_Panel=box_devices.create_panel_btn();
-            Carrot_Button_Item btn_done=btn_Panel.create_btn("btn_done");
-            btn_done.set_bk_color(this.app.cr.color_highlight);
-            btn_done.set_label("Done");
-            btn_done.set_label_color(Color.white);
-            btn_done.set_icon_white(this.app.cr.icon_carrot_done);
-            btn_done.set_act_click(()=>{
-                this.list_id_devices=new List<string>();
-                for(int i=0;i<list_device.Count;i++){
-                    if(list_select[i]) this.list_id_devices.Add(list_device[i]);
-                }
-                PlayerPrefs.SetString("list_id_devices",Json.Serialize(this.list_id_devices));
-                this.Update_Ui();
-                box_devices.close();
-                this.app.cr.play_sound_click();
-            });
+            if(is_select_device){
+                Carrot_Box_Btn_Panel btn_Panel=box_devices.create_panel_btn();
+                Carrot_Button_Item btn_done=btn_Panel.create_btn("btn_done");
+                btn_done.set_bk_color(this.app.cr.color_highlight);
+                btn_done.set_label("Done");
+                btn_done.set_label_color(Color.white);
+                btn_done.set_icon_white(this.app.cr.icon_carrot_done);
+                btn_done.set_act_click(()=>{
+                    this.list_id_devices=new List<string>();
+                    for(int i=0;i<list_device.Count;i++){
+                        if(list_select[i]) this.list_id_devices.Add(list_device[i]);
+                    }
+                    PlayerPrefs.SetString("list_id_devices",Json.Serialize(this.list_id_devices));
+                    this.Update_Ui();
+                    box_devices.close();
+                    this.app.cr.play_sound_click();
+                });
 
-            Carrot_Button_Item btn_cancel=btn_Panel.create_btn("btn_cancel");
-            btn_cancel.set_bk_color(this.app.cr.color_highlight);
-            btn_cancel.set_label("Cancel");
-            btn_cancel.set_label_color(Color.white);
-            btn_cancel.set_icon_white(this.app.cr.icon_carrot_cancel);
-            btn_cancel.set_act_click(()=>{
-                box_devices.close();
-                this.app.cr.play_sound_click();
-            });
+                Carrot_Button_Item btn_cancel=btn_Panel.create_btn("btn_cancel");
+                btn_cancel.set_bk_color(this.app.cr.color_highlight);
+                btn_cancel.set_label("Cancel");
+                btn_cancel.set_label_color(Color.white);
+                btn_cancel.set_icon_white(this.app.cr.icon_carrot_cancel);
+                btn_cancel.set_act_click(()=>{
+                    box_devices.close();
+                    this.app.cr.play_sound_click();
+                });
+            }
         });
     }
 

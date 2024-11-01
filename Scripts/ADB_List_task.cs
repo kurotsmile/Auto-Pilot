@@ -183,10 +183,14 @@ public class ADB_List_task : MonoBehaviour
             return;
         }
 
-        this.app.adb.GetInstalledApps(this.app.devices_manager.list_id_devices[0].ToString(),apps=>{
-            this.list_task=this.Fomat_col_item_list_app(apps);
-            this.Update_list_task_ui();
-        });
+        if(this.app.devices_manager.list_id_devices.Count==1){
+            this.app.adb.GetInstalledApps(this.app.devices_manager.list_id_devices[0].ToString(),apps=>{
+                this.list_task=this.Fomat_col_item_list_app(apps);
+                this.Update_list_task_ui();
+            });
+        }else{
+            this.app.devices_manager.Show_list_devices(false);
+        }
     }
 
     public IList Fomat_col_item_list_app(List<string> apps){
