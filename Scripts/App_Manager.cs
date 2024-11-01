@@ -13,7 +13,7 @@ public class App_Manager : MonoBehaviour
 
     public void Show_Select_App_Id(UnityAction<string> act_done=null){
         if(this.app.devices_manager.list_id_devices.Count==1){
-            this.Show_List_App_By_ID_Device(this.app.devices_manager.list_id_devices[0],act_done);
+            this.Show_List_App_By_ID_Device(this.app.devices_manager.list_id_devices[0].ToString(),act_done);
         }else{
 
         }

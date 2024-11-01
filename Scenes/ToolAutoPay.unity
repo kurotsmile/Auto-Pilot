@@ -6675,7 +6675,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   app: {fileID: 1667508230}
-  list_id_devices: []
+  txt_devices: {fileID: 1607953504}
 --- !u!114 &1667508237
 MonoBehaviour:
   m_ObjectHideFlags: 0

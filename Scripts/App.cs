@@ -60,6 +60,7 @@ public class App : MonoBehaviour
         this.Load_menu_main();
         this.adb_editor.Set_Act_close(Load_menu_main);
         this.adb_tasks.Set_Act_Close(Load_menu_main);
+        this.devices_manager.On_Load();
     }
 
     public void Quit_App()

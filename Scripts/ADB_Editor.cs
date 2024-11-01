@@ -337,7 +337,7 @@ public class ADB_Editor : MonoBehaviour
                     if(control_data["type"].ToString()==CONTROL_ADB_TYPE.open_app.ToString()) this.app.adb.On_Open_App(control_data["id_app"].ToString());
                     if(control_data["type"].ToString()==CONTROL_ADB_TYPE.close_app.ToString()) this.app.adb.On_Stop_App(control_data["id_app"].ToString());
                     if(control_data["type"].ToString()==CONTROL_ADB_TYPE.close_all_app.ToString()) this.app.adb.On_stop_all_app();
-                    if(control_data["type"].ToString()==CONTROL_ADB_TYPE.swipe.ToString())  this.app.adb.On_Swipe(control_data["x1"].ToString(),control_data["y1"].ToString(),control_data["x2"].ToString(),control_data["y2"].ToString(),int.Parse(control_data["timer"].ToString()));
+                    if(control_data["type"].ToString()==CONTROL_ADB_TYPE.swipe.ToString())  this.app.adb.On_Swipe(control_data["x1"].ToString(),control_data["y1"].ToString(),control_data["x2"].ToString(),control_data["y2"].ToString(),control_data["timer"].ToString());
                     if(control_data["type"].ToString()==CONTROL_ADB_TYPE.open_app_setting.ToString()) this.app.adb.Open_Setting_App(control_data["id_app"].ToString());
                     if(control_data["type"].ToString()==CONTROL_ADB_TYPE.adb_cmd.ToString()) this.app.adb.RunADBCommand_All_Device(control_data["cmd"].ToString());
                     if(control_data["type"].ToString()==CONTROL_ADB_TYPE.forced_stop.ToString()) this.app.adb.Force_Stop_App(control_data["id_app"].ToString());

@@ -2,16 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using Carrot;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Devices_Manager : MonoBehaviour
 {
     [Header("Main Obj")]
     public App app;
-    public List<string> list_id_devices;
+    public IList list_id_devices;
+    [Header("UI")]
+    public Text txt_devices;
     private Carrot_Box box=null;
 
     public void On_Load(){
-
+        this.list_id_devices=(IList)Json.Deserialize("[]");
+        if(PlayerPrefs.GetString("list_id_devices","")!=""){
+            this.list_id_devices=(IList)Json.Deserialize(PlayerPrefs.GetString("list_id_devices"));
+        }
+        this.Update_Ui();
     }
 
     public void Show_list_devices(){
@@ -87,6 +94,8 @@ public class Devices_Manager : MonoBehaviour
                 for(int i=0;i<list_device.Count;i++){
                     if(list_select[i]) this.list_id_devices.Add(list_device[i]);
                 }
+                PlayerPrefs.SetString("list_id_devices",Json.Serialize(this.list_id_devices));
+                this.Update_Ui();
                 box_devices.close();
                 this.app.cr.play_sound_click();
             });
@@ -112,8 +121,12 @@ public class Devices_Manager : MonoBehaviour
     }
 
     private void Set_One_Device(string id_main_device){
-        List<string> list_one=new();
-        list_one.Add(id_main_device);
-        this.list_id_devices=list_one;
+        this.list_id_devices=(IList)Json.Deserialize("[]");
+        this.list_id_devices.Add(id_main_device);
+        this.Update_Ui();
+    }
+
+    private void Update_Ui(){
+        this.txt_devices.text="List Devices("+this.list_id_devices.Count+")";
     }
 }

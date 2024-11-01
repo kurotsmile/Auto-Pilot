@@ -23,8 +23,9 @@ public class ADB_Control : MonoBehaviour
     private bool is_timer_waiting=false;
 
     private UnityAction act_done;
+    private IList data_arg_temp=null;
 
-    public void On_Play(IList list_cmd,UnityAction act_done=null){
+    public void On_Play(IList list_cmd,UnityAction act_done=null,IList data_arg=null){
         if(this.list_command==null||this.list_command.Count==0){
             this.app.cr.Show_msg("ADB Control","No commands have been created yet!",Msg_Icon.Alert);
         }
@@ -38,7 +39,8 @@ public class ADB_Control : MonoBehaviour
             this.slider_process_length.value=0;
             this.index_comand_cur=0;
             this.act_done=act_done;
-            this.is_play=true;    
+            this.is_play=true;
+            this.data_arg_temp=data_arg;
         }
     }
 
@@ -59,19 +61,19 @@ public class ADB_Control : MonoBehaviour
                 }
                 IDictionary data_item=(IDictionary) this.list_command[this.index_comand_cur];
 
-                if(data_item["type"].ToString()==CONTROL_ADB_TYPE.mouse_click.ToString()) this.On_Mouse_Click(data_item["x"].ToString(),data_item["y"].ToString());
+                if(data_item["type"].ToString()==CONTROL_ADB_TYPE.mouse_click.ToString()) this.On_Mouse_Click(this.Arg(data_item["x"].ToString()),this.Arg(data_item["y"].ToString()));
                 if(data_item["type"].ToString()==CONTROL_ADB_TYPE.waiting.ToString()){
-                    this.timer_step_waiting=int.Parse(data_item["timer"].ToString());
+                    this.timer_step_waiting=int.Parse(this.Arg(data_item["timer"].ToString()));
                     this.is_timer_waiting=true;
                 }
 
-                if(data_item["type"].ToString()==CONTROL_ADB_TYPE.send_text.ToString()) this.On_Send_Text(data_item["text"].ToString());
-                if(data_item["type"].ToString()==CONTROL_ADB_TYPE.open_app.ToString()) this.On_Open_App(data_item["id_app"].ToString());
-                if(data_item["type"].ToString()==CONTROL_ADB_TYPE.close_app.ToString()) this.On_Stop_App(data_item["id_app"].ToString());
-                if(data_item["type"].ToString()==CONTROL_ADB_TYPE.swipe.ToString()) this.On_Swipe(data_item["x1"].ToString(),data_item["y1"].ToString(),data_item["x2"].ToString(),data_item["y2"].ToString(),int.Parse(data_item["timer"].ToString()));
-                if(data_item["type"].ToString()==CONTROL_ADB_TYPE.open_app_setting.ToString()) this.Open_Setting_App(data_item["id_app"].ToString());
-                if(data_item["type"].ToString()==CONTROL_ADB_TYPE.adb_cmd.ToString()) this.RunADBCommand_All_Device(data_item["cmd"].ToString());
-                if(data_item["type"].ToString()==CONTROL_ADB_TYPE.forced_stop.ToString()) this.Force_Stop_App(data_item["id_app"].ToString());
+                if(data_item["type"].ToString()==CONTROL_ADB_TYPE.send_text.ToString()) this.On_Send_Text(this.Arg(data_item["text"].ToString()));
+                if(data_item["type"].ToString()==CONTROL_ADB_TYPE.open_app.ToString()) this.On_Open_App(this.Arg(data_item["id_app"].ToString()));
+                if(data_item["type"].ToString()==CONTROL_ADB_TYPE.close_app.ToString()) this.On_Stop_App(this.Arg(data_item["id_app"].ToString()));
+                if(data_item["type"].ToString()==CONTROL_ADB_TYPE.swipe.ToString()) this.On_Swipe(this.Arg(data_item["x1"].ToString()),this.Arg(data_item["y1"].ToString()),this.Arg(data_item["x2"].ToString()),this.Arg(data_item["y2"].ToString()),this.Arg(data_item["timer"].ToString()));
+                if(data_item["type"].ToString()==CONTROL_ADB_TYPE.open_app_setting.ToString()) this.Open_Setting_App(this.Arg(data_item["id_app"].ToString()));
+                if(data_item["type"].ToString()==CONTROL_ADB_TYPE.adb_cmd.ToString()) this.RunADBCommand_All_Device(this.Arg(data_item["cmd"].ToString()));
+                if(data_item["type"].ToString()==CONTROL_ADB_TYPE.forced_stop.ToString()) this.Force_Stop_App(this.Arg(data_item["id_app"].ToString()));
 
                 this.slider_process_length.value=(this.index_comand_cur+1);
                 this.index_comand_cur++;
@@ -91,91 +93,51 @@ public class ADB_Control : MonoBehaviour
 
     public void On_Mouse_Click(string x,string y){
         this.app.txt_status_app.text="Tap x:"+x+" , y:"+y;
-        if(this.is_memu){
+        if(this.is_memu)
             this.RunCommandWithMemu("adb shell input tap "+x+" "+y);
-        }
-        else{
-            if(this.app.devices_manager.Check_devices_alive()){
-                for(int i=0;i<this.app.devices_manager.list_id_devices.Count;i++){
-                    string id_device=this.app.devices_manager.list_id_devices[i];
-                    this.RunADBCommand("adb -s "+id_device+" shell input tap "+x+" "+y);
-                }
-            }
-        }
+        else
+            this.RunADBCommand_All_Device("shell input tap "+x+" "+y);
     }
 
     public void On_Send_Text(string s_text){
         this.app.txt_status_app.text="Send Text:"+s_text;
-        if(this.is_memu){
+        if(this.is_memu)
             this.RunCommandWithMemu("adb shell input text \""+s_text+"\"");
-        }else{
-            if(this.app.devices_manager.Check_devices_alive()){
-                for(int i=0;i<this.app.devices_manager.list_id_devices.Count;i++){
-                    string id_device=this.app.devices_manager.list_id_devices[i];
-                    this.RunADBCommand("adb -s "+id_device+" shell input text \""+s_text+"\"");
-                }
-            }
-        }
+        else
+            this.RunADBCommand_All_Device("shell input text \""+s_text+"\"");
     }
 
-    public void On_Swipe(string x1,string y1,string x2,string y2,int timer_ms){
+    public void On_Swipe(string x1,string y1,string x2,string y2,string timer_ms){
         this.app.txt_status_app.text="Swipe "+x1+","+y1+" -> "+x2+","+y2;
-        if(this.is_memu){
+        if(this.is_memu)
             this.RunCommandWithMemu("adb shell input swipe "+x1+" "+y1+" "+x2+" "+y2+" "+timer_ms);
-        }
-        else{
-            if(this.app.devices_manager.Check_devices_alive()){
-                for(int i=0;i<this.app.devices_manager.list_id_devices.Count;i++){
-                    string id_device=this.app.devices_manager.list_id_devices[i];
-                    this.RunADBCommand("adb -s "+id_device+" shell input swipe "+x1+" "+y1+" "+x2+" "+y2+" "+timer_ms);
-                }
-            }
-        }
+        else
+            this.RunADBCommand_All_Device("shell input swipe "+x1+" "+y1+" "+x2+" "+y2+" "+timer_ms);
     }
 
     public void On_Open_App(string id_app){
         this.app.txt_status_app.text="Open app "+id_app;
-        if(this.is_memu){
+        if(this.is_memu)
             this.RunCommandWithMemu("adb shell monkey -p "+id_app+" -v 1");
-        }
-        else{
-            if(this.app.devices_manager.Check_devices_alive()){
-                for(int i=0;i<this.app.devices_manager.list_id_devices.Count;i++){
-                    string id_device=this.app.devices_manager.list_id_devices[i];
-                    this.RunADBCommand("adb shell monkey -p "+id_app+" -v 1");
-                }
-            }
-        }
+        else
+            this.RunADBCommand_All_Device("shell monkey -p "+id_app+" -v 1");
     }
 
     public void On_Stop_App(string packageName)
     {
         this.app.txt_status_app.text="Close app "+packageName;
-        if(this.is_memu){
+        if(this.is_memu)
             this.RunCommandWithMemu("adb shell am force-stop "+packageName);
-        }
-        else{
-            if(this.app.devices_manager.Check_devices_alive()){
-                for(int i=0;i<this.app.devices_manager.list_id_devices.Count;i++){
-                    string id_device=this.app.devices_manager.list_id_devices[i];
-                    this.RunADBCommand("adb -s "+id_device+" shell am force-stop "+packageName);
-                }
-            }
-        }
+        else
+            this.RunADBCommand_All_Device("shell am force-stop "+packageName);
     }
 
     public void On_stop_all_app(){
         this.app.txt_status_app.text="Close all app!";
-        if(this.is_memu){
+        if(this.is_memu)
             this.RunCommandWithMemu("adb shell am kill-all");
-        }else{
-            if(this.app.devices_manager.Check_devices_alive()){
-                for(int i=0;i<this.app.devices_manager.list_id_devices.Count;i++){
-                    string id_device=this.app.devices_manager.list_id_devices[i];
-                    this.RunADBCommand("adb -s "+id_device+" shell am kill-all");
-                }
-            }
-        }
+        else
+            this.RunADBCommand_All_Device("shell am kill-all");
     }
 
     public void RunCommandWithMemu(string s_command,UnityAction<string> act_done=null)
@@ -288,5 +250,12 @@ public class ADB_Control : MonoBehaviour
 
     public void RunADBCommand_All_Device(string s_command){
         for(int i=0;i<this.app.devices_manager.list_id_devices.Count;i++) this.RunADBCommand("adb -s "+this.app.devices_manager.list_id_devices[i]+" "+s_command);
+    }
+
+    private string Arg(string s_command){
+        for(int i=0;i<this.data_arg_temp.Count;i++){
+            s_command = s_command.Replace("[" + i + "]", this.data_arg_temp[i].ToString());
+        }
+        return s_command;
     }
 }

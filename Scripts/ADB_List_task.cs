@@ -1,7 +1,7 @@
+using System.Collections;
 using System.Collections.Generic;
 using Carrot;
 using SimpleFileBrowser;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -15,7 +15,7 @@ public class ADB_List_task : MonoBehaviour
     public GameObject panel_btn;
     public Image img_btn_play;
     public Text txt_btn_play;
-    private List<string> list_task;
+    private IList list_task;
     private int index_cur_task=0;
     private bool is_play=false;
     private string s_data_task_temp=null;
@@ -36,7 +36,8 @@ public class ADB_List_task : MonoBehaviour
         if(list_task_app==null){
             if(PlayerPrefs.GetString("s_data_task_temp","")!=""){
                 this.s_data_task_temp= PlayerPrefs.GetString("s_data_task_temp");
-                this.Load_list_by_data(this.s_data_task_temp);
+                this.list_task=(IList) Json.Deserialize(this.s_data_task_temp);
+                this.Update_list_task_ui();
             }
         }else{
             this.list_task=list_task_app;
@@ -52,33 +53,29 @@ public class ADB_List_task : MonoBehaviour
 
     public void Open_file_tastk_app(){
         this.app.cr.play_sound_click();
-        this.app.file.Set_filter(Carrot_File_Data.TextDocument);
-        this.index_cur_task=0;
+        this.app.file.Set_filter(Carrot_File_Data.JsonData);
         this.app.file.Open_file(paths=>{
+            this.index_cur_task=0;
             this.app.cr.clear_contain(this.app.tr_all_item);
             string s_path=paths[0];
             string fileContent = FileBrowserHelpers.ReadTextFromFile(s_path);
-            this.Load_list_by_data(fileContent);
+            this.list_task=(IList) Json.Deserialize(fileContent);
             PlayerPrefs.SetString("s_data_task_temp",fileContent);
+            this.Update_list_task_ui();
         });
     }
 
-    private void Load_list_by_data(string s_data){
-        string[] lines = s_data.Split('\n');
-        this.list_task=new List<string>();
-        foreach (string line in lines) this.list_task.Add(line);
-        this.Update_list_task_ui();
-    }
 
     private void Update_list_task_ui(){
         this.app.cr.clear_contain(this.app.tr_all_item);
         for(int i=0;i<this.list_task.Count;i++){
+            IList data_app=(IList) Json.Deserialize(this.list_task[i].ToString());
             var index=i;
-            var id_app=this.list_task[i];
+            var id_app=data_app[0].ToString();
             Carrot_Box_Item box_item=this.app.Add_item_main();
             box_item.set_title("App "+i);
             box_item.txt_name.color=Color.white;
-            box_item.set_tip(this.list_task[i]);
+            box_item.set_tip(id_app);
             box_item.set_icon_white(this.app.cr.icon_carrot_app);
             box_item.set_act(()=>{
                 this.index_cur_task=index;
@@ -135,14 +132,13 @@ public class ADB_List_task : MonoBehaviour
     }
 
     private void Play_task_by_index(int index){
-        Debug.Log("Play task : "+this.list_task[index]);
-        this.app.adb.On_Open_App(this.list_task[index]);
+        IList data_arg=(IList)Json.Deserialize(this.list_task[index].ToString());
+        Debug.Log("Play task : "+data_arg[0].ToString());
         this.Update_list_ui();
-        this.app.txt_status_app.text="Play task:"+index+" "+this.list_task[index];
+        this.app.txt_status_app.text="Play task:"+index+" "+data_arg[0].ToString();
         this.app.adb.On_Play(this.app.adb_editor.Get_list_command_method_cur(),()=>{
-            this.app.adb.On_Stop_App(this.list_task[index]);
             this.On_Next_task();
-        });
+        },data_arg);
     }
 
     private void Update_list_ui(){
@@ -164,6 +160,7 @@ public class ADB_List_task : MonoBehaviour
     }
 
     public void Save_File_List_App(){
+        this.app.file.Set_filter(Carrot_File_Data.JsonData);
         this.app.file.Save_file(pasths=>{
             string s_path=pasths[0];
             this.SaveListToFile(s_path);
@@ -172,21 +169,8 @@ public class ADB_List_task : MonoBehaviour
 
     private void SaveListToFile(string filePath)
     {
-        try
-        {
-            using (System.IO.StreamWriter writer = new System.IO.StreamWriter(filePath))
-            {
-                foreach (string line in this.list_task)
-                {
-                    writer.Write(line+"\n");
-                }
-                this.app.cr.Show_msg("Save file succes!","Save File",Msg_Icon.Success);
-            }
-        }
-        catch (System.IO.IOException e)
-        {
-            Debug.LogError("Error save file: " + e.Message);
-        }
+        FileBrowserHelpers.WriteTextToFile(filePath,Json.Serialize(this.list_task));
+        this.app.cr.Show_msg("Save Excel","Save File Excel Success!\nAt:"+filePath,Msg_Icon.Success);
     }
 
     public void Set_Act_Close(UnityAction act){
@@ -199,8 +183,15 @@ public class ADB_List_task : MonoBehaviour
             return;
         }
 
-        this.app.adb.GetInstalledApps(this.app.devices_manager.list_id_devices[0],apps=>{
-            this.list_task=apps;
+        this.app.adb.GetInstalledApps(this.app.devices_manager.list_id_devices[0].ToString(),apps=>{
+            IList list_app=(IList) Json.Deserialize("[]");
+            for(int i=0;i<apps.Count;i++){
+                IList list_col=(IList) Json.Deserialize("[]");
+                list_col.Add(apps[i]);
+                list_app.Add(Json.Serialize(list_col));
+            }
+            this.list_task=list_app;
+            Debug.Log(Json.Serialize(this.list_task));
             this.Update_list_task_ui();
         });
     }
