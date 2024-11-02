@@ -4,6 +4,11 @@ using Carrot;
 using UnityEngine;
 using UnityEngine.UI;
 
+public enum Type_Show_Devices{
+    select_devices,
+    dev_mode,
+    get_apps
+}
 public class Devices_Manager : MonoBehaviour
 {
     [Header("Main Obj")]
@@ -11,7 +16,6 @@ public class Devices_Manager : MonoBehaviour
     public IList list_id_devices;
     [Header("UI")]
     public Text txt_devices;
-    private Carrot_Box box=null;
 
     public void On_Load(){
         this.list_id_devices=(IList)Json.Deserialize("[]");
@@ -22,10 +26,10 @@ public class Devices_Manager : MonoBehaviour
     }
 
     public void Show(){
-        this.Show_list_devices(true);
+        this.Show_list_devices(Type_Show_Devices.select_devices);
     }
 
-    public void Show_list_devices(bool is_select_device=false){
+    public void Show_list_devices(Type_Show_Devices type=Type_Show_Devices.select_devices){
         this.app.adb.ListConnectedDevices(list=>{
 
             List<string> list_device=new();
@@ -60,9 +64,19 @@ public class Devices_Manager : MonoBehaviour
                     device_item.set_title(list_device[i]);
                     device_item.set_tip("Device Android");
                     device_item.set_icon(this.app.cr.icon_carrot_app);
-                    if(is_select_device==false){
+                    if(type==Type_Show_Devices.get_apps){
                         device_item.set_act(()=>{
                             this.app.apps.Show_List_App_By_ID_Device(id_device);
+                        });
+                    }
+
+                    if(type==Type_Show_Devices.dev_mode){
+                        device_item.set_act(()=>{
+                            this.app.adb.RunADBCommand_One_Device(id_device,"shell settings put system pointer_location 1",logs=>{
+                                this.app.adb.RunPowershellCMD("scrcpy -s "+id_device,log=>{
+                                    this.app.adb.RunADBCommand_One_Device(id_device,"shell settings put system pointer_location 0");
+                                });
+                            });
                         });
                     }
 
@@ -90,19 +104,21 @@ public class Devices_Manager : MonoBehaviour
                         this.app.adb.RunPowershellCMD("scrcpy -s "+id_device);
                     });
 
-                    Carrot_Box_Btn_Item btn_get_all_app=device_item.create_item();
-                    btn_get_all_app.set_icon(this.app.sp_icon_get_all_app);
-                    btn_get_all_app.set_icon_color(Color.white);
-                    btn_get_all_app.set_color(this.app.cr.color_highlight);
-                    btn_get_all_app.set_act(()=>{
-                        this.app.adb.GetInstalledApps(id_device,datas=>{
-                            this.app.adb_tasks.On_Show(this.app.adb_tasks.Fomat_col_item_list_app(datas));
-                            box_devices.close();
-                            this.Set_One_Device(id_device);
+                    if(type!=Type_Show_Devices.dev_mode){
+                        Carrot_Box_Btn_Item btn_get_all_app=device_item.create_item();
+                        btn_get_all_app.set_icon(this.app.sp_icon_get_all_app);
+                        btn_get_all_app.set_icon_color(Color.white);
+                        btn_get_all_app.set_color(this.app.cr.color_highlight);
+                        btn_get_all_app.set_act(()=>{
+                            this.app.adb.GetInstalledApps(id_device,datas=>{
+                                this.app.adb_tasks.On_Show(this.app.adb_tasks.Fomat_col_item_list_app(datas));
+                                box_devices.close();
+                                this.Set_One_Device(id_device);
+                            });
                         });
-                    });
+                    }
 
-                    if(is_select_device){
+                    if(type==Type_Show_Devices.select_devices){
                         Carrot_Box_Btn_Item btn_sel=device_item.create_item();
                         btn_sel.set_icon(this.app.cr.icon_carrot_done);
                         btn_sel.set_icon_color(Color.white);
@@ -120,7 +136,7 @@ public class Devices_Manager : MonoBehaviour
                 }
             }
 
-            if(is_select_device){
+            if(type==Type_Show_Devices.select_devices){
                 Carrot_Box_Btn_Panel btn_Panel=box_devices.create_panel_btn();
                 Carrot_Button_Item btn_done=btn_Panel.create_btn("btn_done");
                 btn_done.set_bk_color(this.app.cr.color_highlight);

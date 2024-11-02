@@ -184,7 +184,7 @@ public class ADB_List_task : MonoBehaviour
                 this.Update_list_task_ui();
             });
         }else{
-            this.app.devices_manager.Show_list_devices(false);
+            this.app.devices_manager.Show_list_devices(Type_Show_Devices.get_apps);
         }
     }
 

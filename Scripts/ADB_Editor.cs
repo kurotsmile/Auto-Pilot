@@ -747,7 +747,7 @@ public class ADB_Editor : MonoBehaviour
     private void Add_btn_dev_for_box(){
         Carrot_Box_Btn_Item btn_dev=this.box.create_btn_menu_header(this.app.cr.sp_icon_dev);
         btn_dev.set_act(()=>{
-            this.app.devices_manager.Show_list_devices(false);
+            this.app.devices_manager.Show_list_devices(Type_Show_Devices.dev_mode);
         });
     }
 

@@ -98,6 +98,14 @@ public class App_Manager : MonoBehaviour
             this.app.adb.On_Open_App(id_app);
         });
 
+        Carrot_Box_Item item_setting=this.box.create_item();
+        item_setting.set_icon(this.app.cr.sp_icon_setting);
+        item_setting.set_title("Open setting");
+        item_setting.set_tip("Open setting app");
+        item_setting.set_act(()=>{
+            this.app.adb.Open_Setting_App(id_app);
+        });
+
         Carrot_Box_Item item_clear_data=this.box.create_item();
         item_clear_data.set_icon(this.app.adb_editor.sp_icon_clear_data);
         item_clear_data.set_title("Clear Data");
@@ -111,7 +119,7 @@ public class App_Manager : MonoBehaviour
         item_remove_app.set_title("Remove App");
         item_remove_app.set_tip("Remove the application from the device");
         item_remove_app.set_act(()=>{
-            this.app.adb.Clear_Data_App(id_app);
+            this.app.adb.RunADBCommand_All_Device("uninstall "+id_app);
         });
     }
 }
