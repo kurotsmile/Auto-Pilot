@@ -74,6 +74,7 @@ public class ADB_Control : MonoBehaviour
                 if(data_item["type"].ToString()==CONTROL_ADB_TYPE.open_app_setting.ToString()) this.Open_Setting_App(this.Arg(data_item["id_app"].ToString()));
                 if(data_item["type"].ToString()==CONTROL_ADB_TYPE.adb_cmd.ToString()) this.RunADBCommand_All_Device(this.Arg(data_item["cmd"].ToString()));
                 if(data_item["type"].ToString()==CONTROL_ADB_TYPE.forced_stop.ToString()) this.Force_Stop_App(this.Arg(data_item["id_app"].ToString()));
+                if(data_item["type"].ToString()==CONTROL_ADB_TYPE.clear_data.ToString()) this.Clear_Data_App(this.Arg(data_item["id_app"].ToString()));
 
                 this.slider_process_length.value=(this.index_comand_cur+1);
                 this.index_comand_cur++;

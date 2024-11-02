@@ -17,7 +17,8 @@ public enum CONTROL_ADB_TYPE{
     swipe,
     open_app_setting,
     adb_cmd,
-    forced_stop
+    forced_stop,
+    clear_data
 }
 
 public enum CONTROL_WEB_TYPE{
@@ -49,6 +50,7 @@ public class ADB_Editor : MonoBehaviour
     public Sprite sp_icon_inster_after;
     public Sprite sp_icon_adb_cmd;
     public Sprite sp_icon_forced_stop;
+    public Sprite sp_icon_clear_data;
 
     private IList list_command;
 
@@ -174,6 +176,13 @@ public class ADB_Editor : MonoBehaviour
                 this.Show_edit_control(index_insert,CONTROL_ADB_TYPE.forced_stop,true);
             else
                 this.Show_edit_control(-1,CONTROL_ADB_TYPE.forced_stop);
+        });
+
+        this.app.Add_Item_Right("Clear Data App","Delete application cache data with package name",this.sp_icon_clear_data,tr_father).set_act(()=>{
+            if(index_insert!=-1)
+                this.Show_edit_control(index_insert,CONTROL_ADB_TYPE.clear_data,true);
+            else
+                this.Show_edit_control(-1,CONTROL_ADB_TYPE.clear_data);
         });
 
         this.app.Add_Item_Right("Stop all applications","Stop all user applications excluding system applications",this.sp_icon_stop_all,tr_father).set_act(()=>{
@@ -337,6 +346,12 @@ public class ADB_Editor : MonoBehaviour
                     cr_item.set_tip(control_data["id_app"].ToString());
                 }
 
+                if(control_data["type"].ToString()==CONTROL_ADB_TYPE.clear_data.ToString()){
+                    cr_item.set_icon_white(this.sp_icon_clear_data);
+                    cr_item.set_title("Clear Data");
+                    cr_item.set_tip(control_data["id_app"].ToString());
+                }
+
                 cr_item.check_type();
                 cr_item.txt_name.color=Color.white;
                 cr_item.set_act(()=>{
@@ -349,6 +364,7 @@ public class ADB_Editor : MonoBehaviour
                     if(control_data["type"].ToString()==CONTROL_ADB_TYPE.open_app_setting.ToString()) this.app.adb.Open_Setting_App(control_data["id_app"].ToString());
                     if(control_data["type"].ToString()==CONTROL_ADB_TYPE.adb_cmd.ToString()) this.app.adb.RunADBCommand_All_Device(control_data["cmd"].ToString());
                     if(control_data["type"].ToString()==CONTROL_ADB_TYPE.forced_stop.ToString()) this.app.adb.Force_Stop_App(control_data["id_app"].ToString());
+                    if(control_data["type"].ToString()==CONTROL_ADB_TYPE.clear_data.ToString()) this.app.adb.Clear_Data_App(control_data["id_app"].ToString());
                 });
 
                 Carrot_Box_Btn_Item btn_inster=cr_item.create_item();
@@ -374,6 +390,7 @@ public class ADB_Editor : MonoBehaviour
                         if(control_data["type"].ToString()==CONTROL_ADB_TYPE.open_app_setting.ToString()) this.Show_edit_control(index,CONTROL_ADB_TYPE.open_app_setting);
                         if(control_data["type"].ToString()==CONTROL_ADB_TYPE.adb_cmd.ToString()) this.Show_edit_control(index,CONTROL_ADB_TYPE.adb_cmd);
                         if(control_data["type"].ToString()==CONTROL_ADB_TYPE.forced_stop.ToString()) this.Show_edit_control(index,CONTROL_ADB_TYPE.forced_stop);
+                        if(control_data["type"].ToString()==CONTROL_ADB_TYPE.clear_data.ToString()) this.Show_edit_control(index,CONTROL_ADB_TYPE.clear_data);
                     });
                 }
 
@@ -654,7 +671,7 @@ public class ADB_Editor : MonoBehaviour
                 this.box.set_title("Update ADB Command");
             Carrot_Box_Item inp_cmd=this.box.create_item("inp_cmd");
             inp_cmd.set_title("ADB Command Line");
-            inp_cmd.set_tip("Add custom ADB command line");
+            inp_cmd.set_tip("Add custom ADB command line, Exclude adb keyword");
             inp_cmd.set_icon(this.app.cr.icon_carrot_write);
             inp_cmd.set_type(Box_Item_Type.box_value_input);
             if(data_control["cmd"]!=null) inp_cmd.set_val(data_control["cmd"].ToString());
@@ -678,6 +695,27 @@ public class ADB_Editor : MonoBehaviour
                 this.box.set_title("Add Forced Stop App");
             else
                 this.box.set_title("Update Forced Stop App");
+            Carrot_Box_Item inp_id_app=this.Add_field_id_app();
+            if(data_control["id_app"]!=null) inp_id_app.set_val(data_control["id_app"].ToString());
+            btn_Panel=Frm_editor_btn_done(()=>{
+                data_control["id_app"]=inp_id_app.get_val();
+                if(is_insert){
+                    this.list_command.Insert(index+1,data_control);
+                }else{
+                    if(index!=-1)
+                        this.list_command[index]=data_control;
+                    else
+                        this.list_command.Add(data_control);
+                }
+            });
+        }
+
+        if(type==CONTROL_ADB_TYPE.clear_data){
+            this.box.set_icon(this.sp_icon_clear_data);
+            if(index==-1)
+                this.box.set_title("Add Clear Data App");
+            else
+                this.box.set_title("Update Clear Data App");
             Carrot_Box_Item inp_id_app=this.Add_field_id_app();
             if(data_control["id_app"]!=null) inp_id_app.set_val(data_control["id_app"].ToString());
             btn_Panel=Frm_editor_btn_done(()=>{
