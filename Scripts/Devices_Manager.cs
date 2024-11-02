@@ -64,6 +64,14 @@ public class Devices_Manager : MonoBehaviour
                         });
                     }
 
+                    Carrot_Box_Btn_Item btn_scrcpy=device_item.create_item();
+                    btn_scrcpy.set_icon(this.app.sp_icon_scrcpy);
+                    btn_scrcpy.set_icon_color(Color.white);
+                    btn_scrcpy.set_color(this.app.cr.color_highlight);
+                    btn_scrcpy.set_act(()=>{
+                        this.app.adb.RunADBCommand("scrcpy -s "+id_device);
+                    });
+
                     Carrot_Box_Btn_Item btn_get_all_app=device_item.create_item();
                     btn_get_all_app.set_icon(this.app.sp_icon_get_all_app);
                     btn_get_all_app.set_icon_color(Color.white);

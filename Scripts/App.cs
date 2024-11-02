@@ -41,6 +41,7 @@ public class App : MonoBehaviour
     public Sprite  sp_icon_app_user;
     public Sprite  sp_icon_app_system;
     public Sprite  sp_icon_get_all_app;
+    public Sprite  sp_icon_scrcpy;
 
     private bool is_play_simulador=false;
     private bool is_mode_web=true;
