@@ -7,7 +7,6 @@ using UnityEngine.UI;
 public class App_Manager : MonoBehaviour
 {
     public App app;
-    private List<string> list_app=new ();
     private Carrot_Box box=null;
     private string type_app_view="";
 
@@ -55,10 +54,10 @@ public class App_Manager : MonoBehaviour
 
             for(int i=0;i<datas.Count;i++){
                 var s_app_id=datas[i];
-                Carrot_Box_Item box_item_app=this.box.create_item("item_app");
+                Carrot_Box_Item box_item_app=this.box.create_item("item_app_"+i);
                 box_item_app.set_title("App "+i);
-                box_item_app.set_tip(datas[i]);
-                box_item_app.set_icon(this.app.cr.icon_carrot_app);
+                box_item_app.set_tip(s_app_id);
+                this.Extension_btn_item_App(s_app_id,box_item_app);
                 box_item_app.set_act(()=>{
                     act_done?.Invoke(s_app_id);
                     this.box.close();
@@ -67,38 +66,44 @@ public class App_Manager : MonoBehaviour
         },type_app_view);
     }
 
-    private void Load_list_for_contain(Transform tr){
-        this.app.cr.clear_contain(tr);
-        for(int i=0;i<this.list_app.Count;i++){
-            var index=i;
-            var id_app=this.list_app[i];
-            Carrot_Box_Item box_item=this.app.Add_item_main();
-            box_item.set_title("App "+i);
-            box_item.txt_name.color=Color.white;
-            box_item.set_tip(this.list_app[i]);
-            box_item.set_icon_white(this.app.cr.icon_carrot_app);
-            box_item.set_act(()=>{
-                this.app.txt_status_app.text="Select app index:"+index;
-            });
-
-            Carrot_Box_Btn_Item btn_app_setting=box_item.create_item();
-            btn_app_setting.set_icon_color(Color.white);
-            btn_app_setting.set_icon(app.sp_icon_app_setting);
-            btn_app_setting.set_color(app.cr.color_highlight);
-            btn_app_setting.set_act(()=>{
+    public void Extension_btn_item_App(string id_app,Carrot_Box_Item box_Item){
+        Carrot_Box_Btn_Item btn_app_setting=box_Item.create_item();
+        btn_app_setting.set_icon_color(Color.white);
+        btn_app_setting.set_icon(app.sp_icon_app_setting);
+        btn_app_setting.set_color(app.cr.color_highlight);
+        btn_app_setting.set_act(()=>{
                 this.app.adb.Open_Setting_App(id_app);
-            });
+        });
 
-            Carrot_Box_Btn_Item btn_del=box_item.create_item();
-            btn_del.set_icon_color(Color.white);
-            btn_del.set_icon(app.cr.sp_icon_del_data);
-            btn_del.set_color(app.cr.color_highlight);
-            btn_del.set_act(()=>{
-                this.list_app.RemoveAt(index);
-                this.Load_list_for_contain(tr);
-            });
+        Carrot_Box_Btn_Item btn_menu=box_Item.create_item();
+        btn_menu.set_icon_color(Color.white);
+        btn_menu.set_icon(app.cr.icon_carrot_all_category);
+        btn_menu.set_color(app.cr.color_highlight);
+        btn_menu.set_act(()=>{
+            this.Show_Menu_App();
+        });
+    }
 
-            if(i%2==0) box_item.GetComponent<Image>().color=this.app.color_colum_a;
-        }
+    public void Show_Menu_App(){
+        if(this.box!=null) this.box.close();
+        this.box=this.app.cr.Create_Box();
+        this.box.set_title("Menu App");
+        this.box.set_icon(this.app.cr.icon_carrot_all_category);
+
+        Carrot_Box_Item item_clear_data=this.box.create_item();
+        item_clear_data.set_icon(this.app.adb_editor.sp_icon_clear_data);
+        item_clear_data.set_title("Clear Data");
+        item_clear_data.set_tip("Clear data and settings of this app");
+        item_clear_data.set_act(()=>{
+
+        });
+
+        Carrot_Box_Item item_remove_app=this.box.create_item();
+        item_remove_app.set_icon(this.app.cr.sp_icon_del_data);
+        item_remove_app.set_title("Remove App");
+        item_remove_app.set_tip("Remove the application from the device");
+        item_remove_app.set_act(()=>{
+
+        });
     }
 }

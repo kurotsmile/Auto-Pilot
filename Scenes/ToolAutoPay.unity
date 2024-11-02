@@ -6883,6 +6883,7 @@ MonoBehaviour:
   sp_icon_app_system: {fileID: 21300000, guid: d975dcfce2a23764986da5e8a1971c1b, type: 3}
   sp_icon_get_all_app: {fileID: 21300000, guid: a333219438830224a8c36bf99744ebb5, type: 3}
   sp_icon_scrcpy: {fileID: 21300000, guid: 3965455c454ffb14b90d273b5fe37c59, type: 3}
+  sp_icon_open: {fileID: 21300000, guid: 58a021aaf2d3d104cb82ba65bfea667b, type: 3}
 --- !u!114 &1667508231
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,5 +1,6 @@
 ﻿using Carrot;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 public class App : MonoBehaviour
 {
@@ -42,6 +43,7 @@ public class App : MonoBehaviour
     public Sprite  sp_icon_app_system;
     public Sprite  sp_icon_get_all_app;
     public Sprite  sp_icon_scrcpy;
+    public Sprite  sp_icon_open;
 
     private bool is_play_simulador=false;
     private bool is_mode_web=true;
@@ -126,7 +128,36 @@ public class App : MonoBehaviour
     }
 
     public void Btn_show_setting(){
-        this.cr.Create_Setting();
+        Carrot_Box box_setting=this.cr.Create_Setting();
+
+        Carrot_Box_Item item_path_scrcpy=box_setting.create_item_of_top("item_path_scrcpy");
+        item_path_scrcpy.set_icon(this.sp_icon_scrcpy);
+        item_path_scrcpy.set_type(Box_Item_Type.box_value_input);
+        item_path_scrcpy.set_title("Scrcpy Path");
+        item_path_scrcpy.set_tip("Change Scrcpy path support android platform control by UI");
+        item_path_scrcpy.check_type();
+        Create_btn_Open(item_path_scrcpy);
+
+        Carrot_Box_Item item_path_adb=box_setting.create_item_of_top("item_path_adb");
+        item_path_adb.set_icon(this.adb_editor.sp_icon_adb_cmd);
+        item_path_adb.set_type(Box_Item_Type.box_value_input);
+        item_path_adb.set_title("ADB Path");
+        item_path_adb.set_tip("Change adb android path support android platform control by command");
+        item_path_adb.check_type();
+        Create_btn_Open(item_path_adb);
+    }
+
+    private void Create_btn_Open(Carrot_Box_Item item_m){
+        Carrot_Box_Btn_Item btn_open=item_m.create_item();
+        btn_open.set_icon_color(Color.white);
+        btn_open.set_icon(this.sp_icon_open);
+        btn_open.set_color(this.cr.color_highlight);
+        btn_open.set_act(()=>{
+            this.file.Open_folders(parths=>{
+                string parth=parths[0];
+                item_m.set_val(parth);
+            });
+        });
     }
 
     public void Btn_change_mode(){
