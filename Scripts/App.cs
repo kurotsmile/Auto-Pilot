@@ -19,6 +19,7 @@ public class App : MonoBehaviour
     public Devices_Manager devices_manager;
     public App_Manager apps;
     public Excel_Data excel;
+    public Proxy_Manager proxys;
 
     [Header("UI")]
     public Transform tr_all_item;
@@ -44,6 +45,9 @@ public class App : MonoBehaviour
     public Sprite  sp_icon_get_all_app;
     public Sprite  sp_icon_scrcpy;
     public Sprite  sp_icon_open;
+    public Sprite  sp_icon_start_app;
+    public Sprite  sp_icon_postion_click;
+
 
     private bool is_play_simulador=false;
     private bool is_mode_web=true;
@@ -64,6 +68,7 @@ public class App : MonoBehaviour
         this.adb_editor.Set_Act_close(Load_menu_main);
         this.adb_tasks.Set_Act_Close(Load_menu_main);
         this.devices_manager.On_Load();
+        this.proxys.On_Load();
     }
 
     public void Quit_App()

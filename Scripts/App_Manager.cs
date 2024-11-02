@@ -80,22 +80,30 @@ public class App_Manager : MonoBehaviour
         btn_menu.set_icon(app.cr.icon_carrot_all_category);
         btn_menu.set_color(app.cr.color_highlight);
         btn_menu.set_act(()=>{
-            this.Show_Menu_App();
+            this.Show_Menu_App(id_app);
         });
     }
 
-    public void Show_Menu_App(){
+    public void Show_Menu_App(string id_app){
         if(this.box!=null) this.box.close();
         this.box=this.app.cr.Create_Box();
         this.box.set_title("Menu App");
         this.box.set_icon(this.app.cr.icon_carrot_all_category);
+
+        Carrot_Box_Item item_start_app=this.box.create_item();
+        item_start_app.set_icon(this.app.sp_icon_start_app);
+        item_start_app.set_title("Open App");
+        item_start_app.set_tip("Launch the application on the device");
+        item_start_app.set_act(()=>{
+            this.app.adb.On_Open_App(id_app);
+        });
 
         Carrot_Box_Item item_clear_data=this.box.create_item();
         item_clear_data.set_icon(this.app.adb_editor.sp_icon_clear_data);
         item_clear_data.set_title("Clear Data");
         item_clear_data.set_tip("Clear data and settings of this app");
         item_clear_data.set_act(()=>{
-
+            this.app.adb.Clear_Data_App(id_app);
         });
 
         Carrot_Box_Item item_remove_app=this.box.create_item();
@@ -103,7 +111,7 @@ public class App_Manager : MonoBehaviour
         item_remove_app.set_title("Remove App");
         item_remove_app.set_tip("Remove the application from the device");
         item_remove_app.set_act(()=>{
-
+            this.app.adb.Clear_Data_App(id_app);
         });
     }
 }

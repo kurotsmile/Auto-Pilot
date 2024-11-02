@@ -50,7 +50,9 @@ public class Devices_Manager : MonoBehaviour
             box_devices.set_title("List Devices");
             box_devices.set_icon(this.app.sp_icon_devices);
 
+            bool[] is_show_pos=new bool[list_device.Count];
             for(int i=0;i<list_device.Count;i++){
+                is_show_pos[i]=false;
                 if(list_device[i].Trim()!="List of devices attached"){
                     var index=i;
                     var id_device=list_device[i];
@@ -64,12 +66,28 @@ public class Devices_Manager : MonoBehaviour
                         });
                     }
 
+                    Carrot_Box_Btn_Item btn_pos=device_item.create_item();
+                    btn_pos.set_icon(this.app.sp_icon_postion_click);
+                    btn_pos.set_icon_color(Color.white);
+                    btn_pos.set_color(this.app.cr.color_highlight);
+                    btn_pos.set_act(()=>{
+                        if(is_show_pos[index]==false){
+                            this.app.adb.RunADBCommand_One_Device(id_device,"shell settings put system pointer_location 1");
+                            is_show_pos[index]=true;
+                            btn_pos.set_color(Color.red);
+                        }else{
+                            this.app.adb.RunADBCommand_One_Device(id_device,"shell settings put system pointer_location 0");
+                            is_show_pos[index]=false;
+                            btn_pos.set_color(this.app.cr.color_highlight);
+                        }
+                    });
+
                     Carrot_Box_Btn_Item btn_scrcpy=device_item.create_item();
                     btn_scrcpy.set_icon(this.app.sp_icon_scrcpy);
                     btn_scrcpy.set_icon_color(Color.white);
                     btn_scrcpy.set_color(this.app.cr.color_highlight);
                     btn_scrcpy.set_act(()=>{
-                        this.app.adb.RunADBCommand("scrcpy -s "+id_device);
+                        this.app.adb.RunPowershellCMD("scrcpy -s "+id_device);
                     });
 
                     Carrot_Box_Btn_Item btn_get_all_app=device_item.create_item();

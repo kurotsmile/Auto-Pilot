@@ -463,6 +463,8 @@ public class ADB_Editor : MonoBehaviour
                 this.box.set_title("Add Mouse Click");
             else
                 this.box.set_title("Update Mouse Click");
+
+            this.Add_btn_dev_for_box();
             Carrot_Box_Item inp_x=this.Add_field_position("Position x","Position x mouse and tap");
             if(data_control["x"]!=null)
                 inp_x.set_val(data_control["x"].ToString());
@@ -594,7 +596,7 @@ public class ADB_Editor : MonoBehaviour
                 this.box.set_title("Add Swipe");
             else
                 this.box.set_title("Update Swipe");
-
+            this.Add_btn_dev_for_box();
             Carrot_Box_Item inp_x1=this.Add_field_position("Position x1","Position x1 mouse and tap");
             if(data_control["x1"]!=null)
                 inp_x1.set_val(data_control["x1"].ToString());
@@ -739,6 +741,13 @@ public class ADB_Editor : MonoBehaviour
         btn_cancel.set_act_click(()=>{
             this.box.close();
             this.app.cr.play_sound_click();
+        });
+    }
+
+    private void Add_btn_dev_for_box(){
+        Carrot_Box_Btn_Item btn_dev=this.box.create_btn_menu_header(this.app.cr.sp_icon_dev);
+        btn_dev.set_act(()=>{
+            this.app.devices_manager.Show_list_devices(false);
         });
     }
 

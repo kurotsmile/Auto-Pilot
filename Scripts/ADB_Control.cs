@@ -157,7 +157,7 @@ public class ADB_Control : MonoBehaviour
         act_done?.Invoke(output);
     }
 
-    public void RunADBCommand(string command,UnityAction<string> Act_done=null)
+    public void RunPowershellCMD(string command,UnityAction<string> Act_done=null)
     {
         System.Diagnostics.Process process = new System.Diagnostics.Process();
         
@@ -172,7 +172,7 @@ public class ADB_Control : MonoBehaviour
 
         string output = process.StandardOutput.ReadToEnd();
         string error = process.StandardError.ReadToEnd();
-        process.WaitForExit();
+        //process.WaitForExit();
         if (string.IsNullOrEmpty(error))
             Debug.Log("Output: " + output);
         else
@@ -187,7 +187,7 @@ public class ADB_Control : MonoBehaviour
                 this.Load_list_devices(output,Act_done);
             });
         }else{
-            this.RunADBCommand("adb devices",output=>{
+            this.RunPowershellCMD("adb devices",output=>{
                 this.Load_list_devices(output,Act_done);
             });
         }
@@ -214,7 +214,7 @@ public class ADB_Control : MonoBehaviour
             ? "adb shell pm list packages "+arg_app_type
             : $"adb -s {deviceSerial} shell pm list packages "+arg_app_type;
 
-        this.RunADBCommand(adbCommand,s_list=>{
+        this.RunPowershellCMD(adbCommand,s_list=>{
             string[] lines = s_list.Split('\n');
             List<string> appList = new();
             foreach (string line in lines)
@@ -245,12 +245,12 @@ public class ADB_Control : MonoBehaviour
         this.RunADBCommand_All_Device("shell am force-stop "+id_app);
     }
 
-    public void RunADBCommand_One_Device(string id_device,string s_command,UnityAction<string> act_done){
-        this.RunADBCommand("adb -s "+id_device+" "+s_command,act_done);
+    public void RunADBCommand_One_Device(string id_device,string s_command,UnityAction<string> act_done=null){
+        this.RunPowershellCMD("adb -s "+id_device+" "+s_command,act_done);
     }
 
     public void RunADBCommand_All_Device(string s_command){
-        for(int i=0;i<this.app.devices_manager.list_id_devices.Count;i++) this.RunADBCommand("adb -s "+this.app.devices_manager.list_id_devices[i].ToString()+" "+s_command);
+        for(int i=0;i<this.app.devices_manager.list_id_devices.Count;i++) this.RunPowershellCMD("adb -s "+this.app.devices_manager.list_id_devices[i].ToString()+" "+s_command);
     }
 
     private string Arg(string s_command){
