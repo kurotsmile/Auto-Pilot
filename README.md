@@ -2,7 +2,7 @@
 
 **Auto-Pilot** là một công cụ mạnh mẽ giúp tự động hóa kịch bản cho web và ứng dụng Android, được thiết kế để hỗ trợ người dùng tạo và quản lý các tác vụ phức tạp một cách dễ dàng. Công cụ này phù hợp cho cả nhà phát triển và người dùng thông thường, đặc biệt hữu ích trong việc tiết kiệm thời gian và tối ưu hiệu suất.
 
-![screenshot](Images/icon_tool.png.png)
+![screenshot](Images/icon_tool.png)
 
 ## Tính năng nổi bật
 
