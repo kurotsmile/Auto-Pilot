@@ -1,6 +1,11 @@
 using Carrot;
 using UnityEngine;
 using UnityEngine.Events;
+
+public enum TYPE_LIST_APP{
+    get_list,
+    get_one
+}
 public class App_Manager : MonoBehaviour
 {
     public App app;
@@ -9,14 +14,16 @@ public class App_Manager : MonoBehaviour
 
     public void Show_Select_App_Id(UnityAction<string> act_done=null){
         if(this.app.devices_manager.list_id_devices.Count==1){
-            this.Show_List_App_By_ID_Device(this.app.devices_manager.list_id_devices[0].ToString(),act_done);
+            this.Show_List_App_By_ID_Device(this.app.devices_manager.list_id_devices[0].ToString(),TYPE_LIST_APP.get_one,act_done);
         }else{
-
+            this.app.devices_manager.Show_list_devices(Type_Show_Devices.get_id_device,id_device=>{
+                this.Show_List_App_By_ID_Device(id_device,TYPE_LIST_APP.get_one,act_done);
+            });
         }
     }
 
-    public void Show_List_App_By_ID_Device(string id,UnityAction<string> act_done=null){
-        this.app.adb.GetInstalledApps(id,datas=>{
+    public void Show_List_App_By_ID_Device(string id_device,TYPE_LIST_APP type=TYPE_LIST_APP.get_list,UnityAction<string> act_done=null){
+        this.app.adb.GetInstalledApps(id_device,datas=>{
             if(this.box!=null) this.box.close();
             this.box=this.app.cr.Create_Box();
             this.box.set_icon(this.app.cr.icon_carrot_database);
@@ -25,29 +32,31 @@ public class App_Manager : MonoBehaviour
             Carrot_Box_Btn_Item btn_all_type=this.box.create_btn_menu_header(this.app.cr.icon_carrot_all_category);
             btn_all_type.set_act(()=>{
                 this.type_app_view="";
-                Show_List_App_By_ID_Device(id,act_done);
+                Show_List_App_By_ID_Device(id_device,type,act_done);
             });
             if(this.type_app_view=="") btn_all_type.set_icon_color(this.app.cr.color_highlight);
 
             Carrot_Box_Btn_Item btn_user_type=this.box.create_btn_menu_header(this.app.sp_icon_app_user);
             btn_user_type.set_act(()=>{
                 this.type_app_view="-3";
-                Show_List_App_By_ID_Device(id,act_done);
+                Show_List_App_By_ID_Device(id_device,type,act_done);
             });
             if(this.type_app_view=="-3") btn_user_type.set_icon_color(this.app.cr.color_highlight);
 
             Carrot_Box_Btn_Item btn_system_type=this.box.create_btn_menu_header(this.app.sp_icon_app_system);
             btn_system_type.set_act(()=>{
                 this.type_app_view="-s";
-                Show_List_App_By_ID_Device(id,act_done);
+                Show_List_App_By_ID_Device(id_device,type,act_done);
             });
             if(this.type_app_view=="-s") btn_system_type.set_icon_color(this.app.cr.color_highlight);
 
-            Carrot_Box_Btn_Item btn_sel_all=this.box.create_btn_menu_header(this.app.cr.icon_carrot_add,false);
-            btn_sel_all.set_act(()=>{
-                this.app.adb_tasks.On_Show(this.app.adb_tasks.Fomat_col_item_list_app(datas));
-                if(this.box!=null) this.box.close();
-            });
+            if(type==TYPE_LIST_APP.get_list){
+                Carrot_Box_Btn_Item btn_sel_all=this.box.create_btn_menu_header(this.app.cr.icon_carrot_add,false);
+                btn_sel_all.set_act(()=>{
+                    this.app.adb_tasks.On_Show(this.app.adb_tasks.Fomat_col_item_list_app(datas));
+                    if(this.box!=null) this.box.close();
+                });
+            }
 
             for(int i=0;i<datas.Count;i++){
                 var s_app_id=datas[i];

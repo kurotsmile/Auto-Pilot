@@ -48,6 +48,7 @@ public class App : MonoBehaviour
     public Sprite  sp_icon_start_app;
     public Sprite  sp_icon_postion_click;
     public Sprite  sp_icon_reboot;
+    public Sprite  sp_icon_power_off;
     private bool is_play_simulador=false;
     private bool is_mode_web=true;
 

@@ -2,12 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using Carrot;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public enum Type_Show_Devices{
     select_devices,
     dev_mode,
-    get_apps
+    get_apps,
+    get_id_device
 }
 public class Devices_Manager : MonoBehaviour
 {
@@ -25,11 +27,15 @@ public class Devices_Manager : MonoBehaviour
         this.Update_Ui();
     }
 
+    public void Load_List_by_main(){
+
+    }
+
     public void Show(){
         this.Show_list_devices(Type_Show_Devices.select_devices);
     }
 
-    public void Show_list_devices(Type_Show_Devices type=Type_Show_Devices.select_devices){
+    public void Show_list_devices(Type_Show_Devices type=Type_Show_Devices.select_devices,UnityAction<string> act_done=null){
         this.app.adb.ListConnectedDevices(list=>{
 
             List<string> list_device=new();
@@ -67,6 +73,7 @@ public class Devices_Manager : MonoBehaviour
                     if(type==Type_Show_Devices.get_apps){
                         device_item.set_act(()=>{
                             this.app.apps.Show_List_App_By_ID_Device(id_device);
+                            act_done?.Invoke(id_device);
                         });
                     }
 
@@ -77,6 +84,13 @@ public class Devices_Manager : MonoBehaviour
                                     this.app.adb.RunADBCommand_One_Device(id_device,"shell settings put system pointer_location 0");
                                 });
                             });
+                            act_done?.Invoke(id_device);
+                        });
+                    }
+
+                    if(type==Type_Show_Devices.get_id_device){
+                        device_item.set_act(()=>{
+                            act_done?.Invoke(id_device);
                         });
                     }
 
@@ -110,6 +124,14 @@ public class Devices_Manager : MonoBehaviour
                     btn_reboot.set_color(this.app.cr.color_highlight);
                     btn_reboot.set_act(()=>{
                         this.app.adb.RunADBCommand_One_Device(id_device,"reboot");
+                    });
+
+                    Carrot_Box_Btn_Item btn_power_off=device_item.create_item();
+                    btn_power_off.set_icon(this.app.sp_icon_power_off);
+                    btn_power_off.set_icon_color(Color.white);
+                    btn_power_off.set_color(this.app.cr.color_highlight);
+                    btn_power_off.set_act(()=>{
+                        this.app.adb.RunADBCommand_One_Device(id_device,"reboot -p");
                     });
 
                     if(type!=Type_Show_Devices.dev_mode){
