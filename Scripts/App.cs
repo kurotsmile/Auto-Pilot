@@ -49,6 +49,9 @@ public class App : MonoBehaviour
     public Sprite  sp_icon_postion_click;
     public Sprite  sp_icon_reboot;
     public Sprite  sp_icon_power_off;
+    public Sprite  sp_icon_ip;
+    public Sprite  sp_icon_proxy_port;
+    public Sprite  sp_icon_vpn;
     private bool is_play_simulador=false;
     private bool is_mode_web=true;
 
