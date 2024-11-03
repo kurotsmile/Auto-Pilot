@@ -7779,6 +7779,7 @@ MonoBehaviour:
   sp_icon_open: {fileID: 21300000, guid: 58a021aaf2d3d104cb82ba65bfea667b, type: 3}
   sp_icon_start_app: {fileID: 21300000, guid: 873a093dfaa660e41915bd006804a012, type: 3}
   sp_icon_postion_click: {fileID: 21300000, guid: a909e950fe44f244da638f583e4687df, type: 3}
+  sp_icon_reboot: {fileID: 21300000, guid: 268de3ddbfee3d94aa38860d10e6eb3a, type: 3}
 --- !u!114 &1667508231
 MonoBehaviour:
   m_ObjectHideFlags: 0

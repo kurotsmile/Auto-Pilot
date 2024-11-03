@@ -104,6 +104,14 @@ public class Devices_Manager : MonoBehaviour
                         this.app.adb.RunPowershellCMD("scrcpy -s "+id_device);
                     });
 
+                    Carrot_Box_Btn_Item btn_reboot=device_item.create_item();
+                    btn_reboot.set_icon(this.app.sp_icon_reboot);
+                    btn_reboot.set_icon_color(Color.white);
+                    btn_reboot.set_color(this.app.cr.color_highlight);
+                    btn_reboot.set_act(()=>{
+                        this.app.adb.RunADBCommand_One_Device(id_device,"reboot");
+                    });
+
                     if(type!=Type_Show_Devices.dev_mode){
                         Carrot_Box_Btn_Item btn_get_all_app=device_item.create_item();
                         btn_get_all_app.set_icon(this.app.sp_icon_get_all_app);
@@ -133,6 +141,10 @@ public class Devices_Manager : MonoBehaviour
                             }
                         });
                     }
+
+                    this.app.adb.RunADBCommand_One_Device(id_device,"shell getprop ro.product.model",name_device=>{
+                        device_item.set_tip(name_device);
+                    });
                 }
             }
 

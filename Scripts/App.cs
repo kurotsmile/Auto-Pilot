@@ -47,11 +47,12 @@ public class App : MonoBehaviour
     public Sprite  sp_icon_open;
     public Sprite  sp_icon_start_app;
     public Sprite  sp_icon_postion_click;
-
-
+    public Sprite  sp_icon_reboot;
     private bool is_play_simulador=false;
     private bool is_mode_web=true;
 
+    private string  path_scrcpy="";
+    private string path_adb="";
     void Start()
     {
         this.cr.Load_Carrot();
@@ -69,6 +70,9 @@ public class App : MonoBehaviour
         this.adb_tasks.Set_Act_Close(Load_menu_main);
         this.devices_manager.On_Load();
         this.proxys.On_Load();
+
+        if(PlayerPrefs.GetString("path_scrcpy","")!="") this.path_scrcpy=PlayerPrefs.GetString("path_scrcpy");
+        if(PlayerPrefs.GetString("path_adb","")!="") this.path_adb=PlayerPrefs.GetString("path_adb");
     }
 
     public void Quit_App()
@@ -141,6 +145,7 @@ public class App : MonoBehaviour
         item_path_scrcpy.set_title("Scrcpy Path");
         item_path_scrcpy.set_tip("Change Scrcpy path support android platform control by UI");
         item_path_scrcpy.check_type();
+        item_path_scrcpy.set_val(this.path_scrcpy);
         Create_btn_Open(item_path_scrcpy);
 
         Carrot_Box_Item item_path_adb=box_setting.create_item_of_top("item_path_adb");
@@ -149,7 +154,15 @@ public class App : MonoBehaviour
         item_path_adb.set_title("ADB Path");
         item_path_adb.set_tip("Change adb android path support android platform control by command");
         item_path_adb.check_type();
+        item_path_adb.set_val(this.path_adb);
         Create_btn_Open(item_path_adb);
+
+        box_setting.set_act_before_closing(()=>{
+            this.path_scrcpy=item_path_scrcpy.get_val();
+            this.path_adb=item_path_adb.get_val();
+            PlayerPrefs.SetString("path_scrcpy",item_path_scrcpy.get_val());
+            PlayerPrefs.SetString("path_adb",item_path_adb.get_val());
+        });
     }
 
     private void Create_btn_Open(Carrot_Box_Item item_m){

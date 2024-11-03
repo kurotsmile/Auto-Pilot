@@ -1,9 +1,6 @@
-using System.Collections.Generic;
 using Carrot;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.UI;
-
 public class App_Manager : MonoBehaviour
 {
     public App app;
