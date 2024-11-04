@@ -8574,6 +8574,7 @@ MonoBehaviour:
   sp_icon_vpn: {fileID: 2432743416389421403, guid: 85060437de5cc0b438ee4d4bd3ed4d25, type: 3}
   sp_icon_api: {fileID: 21300000, guid: 2d75b9c70ee346a478a81953ce269fa5, type: 3}
   sp_icon_checked: {fileID: 21300000, guid: 6b307f3d01c08e64992870dbfa3127ee, type: 3}
+  sp_icon_checked_all: {fileID: 21300000, guid: 1dc7d79e59691b5428248fd2d2a4df2c, type: 3}
   sp_icon_export: {fileID: 21300000, guid: 2f52a21b0b14c444caad59db8793ff7e, type: 3}
   sp_icon_import: {fileID: 21300000, guid: 828b9f138b8358f4494a2abfe8cdf76f, type: 3}
 --- !u!114 &1667508231
@@ -8701,6 +8702,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   app: {fileID: 1667508230}
   panel_btn: {fileID: 852862778}
+  color_connection_succes:
+    serializedVersion: 2
+    rgba: 4285739264
+  color_connection_fail:
+    serializedVersion: 2
+    rgba: 4278190229
 --- !u!1 &1739248859
 GameObject:
   m_ObjectHideFlags: 0

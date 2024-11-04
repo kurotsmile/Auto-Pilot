@@ -54,6 +54,7 @@ public class App : MonoBehaviour
     public Sprite  sp_icon_vpn;
     public Sprite  sp_icon_api;
     public Sprite  sp_icon_checked;
+    public Sprite  sp_icon_checked_all;
     public Sprite  sp_icon_export;
     public Sprite  sp_icon_import;
     private bool is_play_simulador=false;

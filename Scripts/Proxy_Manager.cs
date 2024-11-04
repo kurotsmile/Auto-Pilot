@@ -1,15 +1,19 @@
 using System.Collections;
 using Carrot;
 using SimpleFileBrowser;
-using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.UI;
 
 public class Proxy_Manager : MonoBehaviour
 {
     [Header("Main Obj")]
     public App app;
+
+    [Header("UI")]
     public GameObject panel_btn;
+    public Color32 color_connection_succes;
+    public Color32 color_connection_fail;
     private IList list_proxy;
 
     public void On_Load(){
@@ -18,6 +22,30 @@ public class Proxy_Manager : MonoBehaviour
             this.list_proxy=(IList) Json.Deserialize(PlayerPrefs.GetString("list_proxy"));
         else
             this.list_proxy=(IList) Json.Deserialize("[]");
+    }
+
+    private void Load_Menu_Right(){
+        this.app.cr.clear_contain(this.app.tr_all_item_right);
+        Carrot_Box_Item item_check_all=this.app.Add_Item_Right("Check All","Check All Proxies",this.app.sp_icon_checked_all);
+        item_check_all.set_act(()=>{
+            for(int i=0;i<this.list_proxy.Count;i++){
+                IDictionary data_p=(IDictionary) this.list_proxy[i];
+                bool is_connection=this.CheckProxy(data_p);
+                if(is_connection)
+                    this.app.tr_all_item.GetChild(i).GetComponent<Image>().color=this.color_connection_succes;
+                else
+                    this.app.tr_all_item.GetChild(i).GetComponent<Image>().color=this.color_connection_fail;
+            }
+        });
+
+        Carrot_Box_Item item_clear_all=this.app.Add_Item_Right("Clear All","Clear All Proxies",this.app.adb_editor.sp_icon_clear_data);
+        item_clear_all.set_act(()=>{
+            this.app.cr.Show_msg("Clear All","Are you sure you want to delete all proxies?",()=>{
+                PlayerPrefs.DeleteKey("list_proxy");
+                this.list_proxy=(IList)Json.Deserialize("[]");
+                this.Update_list_UI();
+            });
+        });
     }
 
     public void Show_Add(){
@@ -103,6 +131,7 @@ public class Proxy_Manager : MonoBehaviour
     public void Show(){
         this.panel_btn.SetActive(true);
         this.Update_list_UI();
+        this.Load_Menu_Right();
     }
 
     public void Close(){
