@@ -110,9 +110,57 @@ public class Proxy_Manager : MonoBehaviour
     }
 
     public void Btn_import_proxy(){
-        this.app.file.Set_filter(Carrot_File_Data.JsonData);
-        this.app.file.Open_file(paths=>{
+        this.app.excel.Show_import(type=>{
 
+            if(type==TYPE_DATA_IE.data_json){
+                this.app.file.Set_filter(Carrot_File_Data.JsonData);
+                this.app.file.Open_file(paths=>{
+                    this.list_proxy=(IList) Json.Deserialize(FileBrowserHelpers.ReadTextFromFile(paths[0]));
+                    PlayerPrefs.SetString("list_proxy",Json.Serialize(this.list_proxy));
+                    this.Update_list_UI();
+                    this.app.cr.Show_msg("Import","Data import successful!",Msg_Icon.Success);
+                });
+            }
+
+            if(type==TYPE_DATA_IE.data_txt){
+                this.app.file.Set_filter(Carrot_File_Data.TextDocument);
+                this.app.file.Open_file(paths=>{
+                    string response=FileBrowserHelpers.ReadTextFromFile(paths[0]);
+                    string[] proxies = response.Split(new[] { "\r\n", "\r", "\n" }, System.StringSplitOptions.RemoveEmptyEntries);
+                    this.list_proxy=(IList) Json.Deserialize("[]");
+                    foreach (string proxy in proxies)
+                    {
+                        string[] parts = proxy.Split(':');
+                        IDictionary data_p = (IDictionary)Json.Deserialize("{}");
+                        data_p["ip"] = parts[0].ToString();
+                        data_p["port"] = parts[1].ToString();
+                        this.list_proxy.Add(data_p);
+                    }
+                    PlayerPrefs.SetString("list_proxy",Json.Serialize(this.list_proxy));
+                    this.Update_list_UI();
+                    this.app.cr.Show_msg("Import","Data import successful!",Msg_Icon.Success);
+                });
+            }
+
+            if(type==TYPE_DATA_IE.data_excel){
+                this.app.file.Set_filter(Carrot_File_Data.ExelData);
+                this.app.file.Open_file(paths=>{
+                    string response=FileBrowserHelpers.ReadTextFromFile(paths[0]);
+                    string[] proxies = response.Split(new[] { "\r\n", "\r", "\n" }, System.StringSplitOptions.RemoveEmptyEntries);
+                    this.list_proxy=(IList) Json.Deserialize("[]");
+                    foreach (string proxy in proxies)
+                    {
+                        string[] parts = proxy.Split(',');
+                        IDictionary data_p = (IDictionary)Json.Deserialize("{}");
+                        data_p["ip"] = parts[0].ToString();
+                        data_p["port"] = parts[1].ToString();
+                        this.list_proxy.Add(data_p);
+                    }
+                    PlayerPrefs.SetString("list_proxy",Json.Serialize(this.list_proxy));
+                    this.Update_list_UI();
+                    this.app.cr.Show_msg("Import","Data import successful!",Msg_Icon.Success);
+                });
+            }
         });
     }
 
@@ -122,18 +170,40 @@ public class Proxy_Manager : MonoBehaviour
                 this.app.file.Set_filter(Carrot_File_Data.JsonData);
                 this.app.file.Save_file(paths=>{
                     FileBrowserHelpers.WriteTextToFile(paths[0],Json.Serialize(this.list_proxy));
+                    this.Show_export_success(paths[0]);
                 });
             }
 
             if(type==TYPE_DATA_IE.data_txt){
                 this.app.file.Set_filter(Carrot_File_Data.TextDocument);
                 this.app.file.Save_file(paths=>{
+                    string s_data="";
                     for(int i=0;i<this.list_proxy.Count;i++){
-                        FileBrowserHelpers.WriteTextToFile(paths[0],Json.Serialize(this.list_proxy));
+                        IDictionary data_p=(IDictionary)this.list_proxy[i]; 
+                        s_data+=""+data_p["ip"].ToString()+":"+data_p["port"].ToString()+"\n";
                     }
+                    FileBrowserHelpers.WriteTextToFile(paths[0],s_data);
+                    this.Show_export_success(paths[0]);
+                });
+            }
+
+            if(type==TYPE_DATA_IE.data_excel){
+                this.app.file.Set_filter(Carrot_File_Data.ExelData);
+                this.app.file.Save_file(paths=>{
+                    string s_data="";
+                    for(int i=0;i<this.list_proxy.Count;i++){
+                        IDictionary data_p=(IDictionary)this.list_proxy[i]; 
+                        s_data+=""+data_p["ip"].ToString()+","+data_p["port"].ToString()+"\n";
+                    }
+                    FileBrowserHelpers.WriteTextToFile(paths[0],s_data);
+                    this.Show_export_success(paths[0]);
                 });
             }
         });
+    }
+
+    private void Show_export_success(string s_path){
+        this.app.cr.Show_msg("Export","Data export successful at path:\n"+s_path,Msg_Icon.Success);
     }
 
     public void Btn_get_api_proxy(){
