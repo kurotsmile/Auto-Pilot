@@ -54,6 +54,8 @@ public class App : MonoBehaviour
     public Sprite  sp_icon_vpn;
     public Sprite  sp_icon_api;
     public Sprite  sp_icon_checked;
+    public Sprite  sp_icon_export;
+    public Sprite  sp_icon_import;
     private bool is_play_simulador=false;
     private bool is_mode_web=true;
 
@@ -153,6 +155,15 @@ public class App : MonoBehaviour
         item_path_scrcpy.check_type();
         item_path_scrcpy.set_val(this.path_scrcpy);
         Create_btn_Open(item_path_scrcpy);
+
+        Carrot_Box_Btn_Item btn_download_scrcpy=item_path_scrcpy.create_item();
+        btn_download_scrcpy.set_icon(this.cr.icon_carrot_download);
+        btn_download_scrcpy.set_icon_color(Color.white);
+        btn_download_scrcpy.set_color(this.cr.color_highlight);
+        btn_download_scrcpy.set_act(()=>{
+            Application.OpenURL("https://github.com/Genymobile/scrcpy/releases");
+            cr.play_sound_click();
+        });
 
         Carrot_Box_Item item_path_adb=box_setting.create_item_of_top("item_path_adb");
         item_path_adb.set_icon(this.adb_editor.sp_icon_adb_cmd);

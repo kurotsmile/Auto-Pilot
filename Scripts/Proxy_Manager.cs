@@ -1,5 +1,7 @@
 using System.Collections;
 using Carrot;
+using SimpleFileBrowser;
+using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -115,9 +117,22 @@ public class Proxy_Manager : MonoBehaviour
     }
 
     public void Btn_export_proxy(){
-        this.app.file.Set_filter(Carrot_File_Data.JsonData);
-        this.app.file.Save_file(paths=>{
+        this.app.excel.Show_export(type=>{
+            if(type==TYPE_DATA_IE.data_json){
+                this.app.file.Set_filter(Carrot_File_Data.JsonData);
+                this.app.file.Save_file(paths=>{
+                    FileBrowserHelpers.WriteTextToFile(paths[0],Json.Serialize(this.list_proxy));
+                });
+            }
 
+            if(type==TYPE_DATA_IE.data_txt){
+                this.app.file.Set_filter(Carrot_File_Data.TextDocument);
+                this.app.file.Save_file(paths=>{
+                    for(int i=0;i<this.list_proxy.Count;i++){
+                        FileBrowserHelpers.WriteTextToFile(paths[0],Json.Serialize(this.list_proxy));
+                    }
+                });
+            }
         });
     }
 

@@ -1,7 +1,14 @@
 using System.Collections.Generic;
+using Carrot;
 using SimpleFileBrowser;
 using UnityEngine;
+using UnityEngine.Events;
 
+public enum TYPE_DATA_IE{
+    data_txt,
+    data_json,
+    data_excel
+}
 public class Excel_Data : MonoBehaviour
 {
     [Header("Main Obj")]
@@ -28,5 +35,28 @@ public class Excel_Data : MonoBehaviour
             List<string> l_data_item=list_data_temp[i];
             FileBrowserHelpers.AppendTextToFile(s_path,l_data_item[0]);
         }
+    }
+
+    public Carrot_Box Show_export(UnityAction<TYPE_DATA_IE> act_done){
+        Carrot_Box box=this.app.cr.Create_Box();
+        box.set_title("Export data");
+        box.set_icon(this.app.sp_icon_export);
+        
+        Carrot_Box_Item item_json=box.create_item("item_json");
+        item_json.set_icon(this.app.cr.icon_carrot_database);
+        item_json.set_title("Export json");
+        item_json.set_tip("Export data to json file");
+        item_json.set_act(()=>{
+            act_done?.Invoke(TYPE_DATA_IE.data_json);
+        });
+
+        Carrot_Box_Item item_txt=box.create_item("item_txt");
+        item_txt.set_icon(this.app.cr.icon_carrot_database);
+        item_txt.set_title("Export Text");
+        item_txt.set_tip("Export data to text file (*.txt)");
+        item_txt.set_act(()=>{
+            act_done?.Invoke(TYPE_DATA_IE.data_json);
+        });
+        return box;
     }
 }
