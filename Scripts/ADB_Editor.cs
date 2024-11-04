@@ -65,9 +65,14 @@ public class ADB_Editor : MonoBehaviour
     public void On_Load(){
         this.panel_btn.SetActive(false);
         this.length_method=PlayerPrefs.GetInt("length_method",0);
-        if(PlayerPrefs.GetString("m_"+index_sel_method+"_data","")==""){
+        if(PlayerPrefs.GetString("m_"+index_sel_method+"_data","")!=""){
             IList list_cmd= (IList) Carrot.Json.Deserialize(PlayerPrefs.GetString("m_"+index_sel_method+"_data"));
             this.app.adb.Set_List_Command(list_cmd);
+        }else{
+            TextAsset m_Click_Pi_Data = Resources.Load<TextAsset>("Pi_Click");
+            TextAsset m_Focus_Stop_Data = Resources.Load<TextAsset>("Focus_Stop");
+            this.Add_method("Focus Stop",m_Focus_Stop_Data.text);
+            this.Add_method("PiNetWork Click",m_Click_Pi_Data.text);
         }
     }
 

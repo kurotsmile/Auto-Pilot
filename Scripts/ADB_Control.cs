@@ -160,7 +160,6 @@ public class ADB_Control : MonoBehaviour
     public void RunPowershellCMD(string command,UnityAction<string> Act_done=null)
     {
         System.Diagnostics.Process process = new System.Diagnostics.Process();
-        
         process.StartInfo.FileName = "powershell.exe";
         process.StartInfo.Arguments = command;
 
@@ -177,6 +176,29 @@ public class ADB_Control : MonoBehaviour
             Debug.Log("Output: " + output);
         else
             Debug.LogError("Error: " + error);
+        Act_done?.Invoke(output);
+    }
+
+    public void RunScrcpyCMD(string command, UnityAction<string> Act_done = null)
+    {
+        System.Diagnostics.Process process = new System.Diagnostics.Process();
+        process.StartInfo.FileName = this.app.get_path_scrcpy()+"\\scrcpy.exe";
+        process.StartInfo.Arguments =command; 
+
+        process.StartInfo.UseShellExecute = false;
+        process.StartInfo.RedirectStandardOutput = true;
+        process.StartInfo.RedirectStandardError = true;
+        process.StartInfo.CreateNoWindow = true;
+        process.Start();
+
+        string output = process.StandardOutput.ReadToEnd();
+        string error = process.StandardError.ReadToEnd();
+    
+        if (string.IsNullOrEmpty(error))
+            Debug.Log("Output: " + output);
+        else
+            Debug.LogError("Error: " + error);
+        
         Act_done?.Invoke(output);
     }
 

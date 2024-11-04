@@ -111,7 +111,7 @@ public class Devices_Manager : MonoBehaviour
                     btn_scrcpy.set_icon_color(Color.white);
                     btn_scrcpy.set_color(this.app.cr.color_highlight);
                     btn_scrcpy.set_act(()=>{
-                        this.app.adb.RunPowershellCMD("scrcpy -s "+id_device);
+                        this.app.adb.RunScrcpyCMD("-s "+id_device);
                     });
 
                     Carrot_Box_Btn_Item btn_reboot=device_item.create_item();

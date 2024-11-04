@@ -259,4 +259,8 @@ public class App : MonoBehaviour
     public bool Get_Mode(){
         return this.is_mode_web;
     }
+
+    public string get_path_scrcpy(){
+        return this.path_scrcpy;
+    }
 }
