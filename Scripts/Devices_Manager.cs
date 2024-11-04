@@ -27,10 +27,6 @@ public class Devices_Manager : MonoBehaviour
         this.Update_Ui();
     }
 
-    public void Load_List_by_main(){
-
-    }
-
     public void Show(){
         this.Show_list_devices(Type_Show_Devices.select_devices);
     }

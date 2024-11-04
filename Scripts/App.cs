@@ -57,6 +57,7 @@ public class App : MonoBehaviour
     public Sprite  sp_icon_checked_all;
     public Sprite  sp_icon_export;
     public Sprite  sp_icon_import;
+    public Sprite  sp_icon_script;
     private bool is_play_simulador=false;
     private bool is_mode_web=true;
 
@@ -74,14 +75,16 @@ public class App : MonoBehaviour
         else
             this.is_mode_web=false;
         this.Check_status_mode();
-        this.Load_menu_main();
+        
         this.adb_editor.Set_Act_close(Load_menu_main);
         this.adb_tasks.Set_Act_Close(Load_menu_main);
         this.devices_manager.On_Load();
-        this.proxys.On_Load();
+        this.proxys.On_Load(Load_menu_main);
 
         if(PlayerPrefs.GetString("path_scrcpy","")!="") this.path_scrcpy=PlayerPrefs.GetString("path_scrcpy");
         if(PlayerPrefs.GetString("path_adb","")!="") this.path_adb=PlayerPrefs.GetString("path_adb");
+
+        this.Load_menu_main();
     }
 
     public void Quit_App()
@@ -220,18 +223,37 @@ public class App : MonoBehaviour
 
     private void Load_menu_main(){
         this.cr.clear_contain(this.tr_all_item);
-        Carrot_Box_Item item_file_excel=this.Add_item_main();
-        item_file_excel.set_title("Import Excel csv");
-        item_file_excel.set_tip("Import data to run automatically from excel file");
-        item_file_excel.set_icon_white(this.sp_icon_excel_file);
-        item_file_excel.set_act(()=>{
-            this.excel.Open_file();
+        Carrot_Box_Item item_devices=this.Add_item_main();
+        item_devices.set_title("Devices");
+        item_devices.set_tip("Devices connected and selected for operation: "+this.devices_manager.list_id_devices.Count);
+        item_devices.set_icon_white(this.sp_icon_devices);
+        item_devices.set_act(()=>{
+            this.devices_manager.Show();
         });
 
-        Carrot_Box_Item item_file_text=this.Add_item_main();
-        item_file_text.set_icon_white(this.sp_icon_text_file);
-        item_file_text.set_title("Import Text file");
-        item_file_text.set_tip("Import data to run automatically from text file");
+        Carrot_Box_Item item_apps=this.Add_item_main();
+        item_apps.set_title("Apps");
+        item_apps.set_tip("Total number of applications under management: "+this.adb_tasks.get_count_list_task());
+        item_apps.set_icon_white(this.sp_icon_get_all_app);
+        item_apps.set_act(()=>{
+            this.adb_tasks.Show();
+        });
+
+        Carrot_Box_Item item_script=this.Add_item_main();
+        item_script.set_title("Automated script");
+        item_script.set_tip("Total number of automated scripts: "+this.adb_editor.get_length_method());
+        item_script.set_icon_white(this.sp_icon_script);
+        item_apps.set_act(()=>{
+            this.adb_editor.Show();
+        });
+
+        Carrot_Box_Item item_proxys=this.Add_item_main();
+        item_proxys.set_title("Proxy");
+        item_proxys.set_tip("Total number of Proxy under management: "+this.proxys.get_length_proxy());
+        item_proxys.set_icon_white(this.sp_icon_proxy_port);
+        item_proxys.set_act(()=>{
+            this.proxys.Show();
+        });
     }
 
     public bool Get_Mode(){

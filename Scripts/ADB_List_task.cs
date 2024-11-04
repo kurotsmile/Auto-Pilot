@@ -22,6 +22,7 @@ public class ADB_List_task : MonoBehaviour
     private UnityAction act_close;
 
     public void On_Load(){
+        this.list_task=(IList)Json.Deserialize("[]");
         this.panel_btn.SetActive(false);
     }
 
@@ -196,5 +197,9 @@ public class ADB_List_task : MonoBehaviour
             list_app.Add(Json.Serialize(list_col));
         }
         return list_app;
+    }
+
+    public int get_count_list_task(){
+        return list_task.Count;
     }
 }

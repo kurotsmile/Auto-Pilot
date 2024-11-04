@@ -2,6 +2,7 @@ using System.Collections;
 using Carrot;
 using SimpleFileBrowser;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
@@ -15,13 +16,15 @@ public class Proxy_Manager : MonoBehaviour
     public Color32 color_connection_succes;
     public Color32 color_connection_fail;
     private IList list_proxy;
+    private UnityAction act_close;
 
-    public void On_Load(){
+    public void On_Load(UnityAction act_close=null){
         this.panel_btn.SetActive(false);
         if(PlayerPrefs.GetString("list_proxy","")!="")
             this.list_proxy=(IList) Json.Deserialize(PlayerPrefs.GetString("list_proxy"));
         else
             this.list_proxy=(IList) Json.Deserialize("[]");
+        this.act_close=act_close;
     }
 
     private void Load_Menu_Right(){
@@ -136,6 +139,7 @@ public class Proxy_Manager : MonoBehaviour
 
     public void Close(){
         this.panel_btn.SetActive(false);
+        this.act_close?.Invoke();
     }
 
     public void Btn_import_proxy(){
@@ -309,5 +313,9 @@ public class Proxy_Manager : MonoBehaviour
 
         client.EndConnect(result);
         return true;
+    }
+
+    public int get_length_proxy(){
+        return this.list_proxy.Count;
     }
 }

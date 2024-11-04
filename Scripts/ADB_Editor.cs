@@ -838,4 +838,8 @@ public class ADB_Editor : MonoBehaviour
         PlayerPrefs.SetString("m_"+this.index_edit+"_data",Json.Serialize(this.list_command));
         this.app.cr.Show_msg("Update method","Update method successful!",Msg_Icon.Success);
     }
+
+    public int get_length_method(){
+        return this.length_method;
+    }
 }
