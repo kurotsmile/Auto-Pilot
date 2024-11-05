@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Carrot;
 using SimpleFileBrowser;
 using UnityEngine;
@@ -31,19 +32,26 @@ public class Proxy_Manager : MonoBehaviour
     private void Load_Menu_Right(){
         this.app.cr.clear_contain(this.app.tr_all_item_right);
         Carrot_Box_Item item_check_all=this.app.Add_Item_Right("Check All","Check All Proxies",this.app.sp_icon_checked_all);
-        item_check_all.set_act(()=>{
-            for(int i=0;i<this.list_proxy.Count;i++){
-                IDictionary data_p=(IDictionary) this.list_proxy[i];
-                bool is_connection=this.CheckProxy(data_p);
-                if(is_connection){
-                    this.app.tr_all_item.GetChild(i).GetComponent<Image>().color=this.color_connection_succes;
-                    data_p["status"]="good";
+        item_check_all.set_act(async ()=>{
+                List<Task<bool>> tasks = new();
+                foreach (IDictionary proxy in this.list_proxy)
+                {
+                    tasks.Add(CheckProxyAsync(proxy));
                 }
-                else{
-                    this.app.tr_all_item.GetChild(i).GetComponent<Image>().color=this.color_connection_fail;
-                    data_p["status"]="failed";
+                bool[] results = await Task.WhenAll(tasks);
+                
+                for (int i = 0; i < list_proxy.Count; i++)
+                {
+                    IDictionary data_p=(IDictionary) list_proxy[i];
+                    if(results[i]){
+                        this.app.tr_all_item.GetChild(i).GetComponent<Image>().color=this.color_connection_succes;
+                        data_p["status"]="good";
+                    }
+                    else{
+                        this.app.tr_all_item.GetChild(i).GetComponent<Image>().color=this.color_connection_fail;
+                        data_p["status"]="failed";
+                    }
                 }
-            }
         });
 
         Carrot_Box_Item item_clear_all=this.app.Add_Item_Right("Clear All","Clear All Proxies",this.app.adb_editor.sp_icon_clear_data);
@@ -135,8 +143,9 @@ public class Proxy_Manager : MonoBehaviour
             btn_check.set_icon_color(Color.white);
             btn_check.set_icon(app.sp_icon_checked);
             btn_check.set_color(app.cr.color_highlight);
-            btn_check.set_act(()=>{
-                if(this.CheckProxy(data_vpn)){
+            btn_check.set_act(async ()=>{
+                bool isWorking = await CheckProxyAsync(data_vpn);
+                if(isWorking){
                     app.cr.Show_msg("Check Proxy","Proxy connection good!",Msg_Icon.Success);
                     btn_check.set_color(Color.green);
                     data_vpn["status"]="good";
@@ -303,7 +312,7 @@ public class Proxy_Manager : MonoBehaviour
 
     private IEnumerator GetProxyList(string url)
     {
-        IList proxyList =(IList) Json.Deserialize("[]");
+        IList proxyList = (IList)Json.Deserialize("[]");
 
         using UnityWebRequest request = UnityWebRequest.Get(url);
         yield return request.SendWebRequest();
@@ -320,27 +329,34 @@ public class Proxy_Manager : MonoBehaviour
             foreach (string proxy in proxies)
             {
                 string[] parts = proxy.Split(':');
-                IDictionary data_p = (IDictionary)Json.Deserialize("{}");
-                data_p["ip"] = parts[0].ToString();
-                data_p["port"] = parts[1].ToString();
-                proxyList.Add(data_p);
+                if (parts.Length == 2)
+                {
+                    IDictionary data_p = (IDictionary)Json.Deserialize("{}");
+                    data_p["ip"] = parts[0];
+                    data_p["port"] = parts[1];
+                    proxyList.Add(data_p);
+                }
+                yield return null;
             }
-            this.list_proxy=proxyList;
-            PlayerPrefs.SetString("list_proxy",Json.Serialize(this.list_proxy));
+
+            this.list_proxy = proxyList;
+            PlayerPrefs.SetString("list_proxy", Json.Serialize(this.list_proxy));
             this.Update_list_UI();
         }
     }
 
-    private bool CheckProxy(IDictionary data)
+    private async Task<bool> CheckProxyAsync(IDictionary data, int timeout = 2000)
     {
         using System.Net.Sockets.TcpClient client = new();
-        System.IAsyncResult result = client.BeginConnect(data["ip"].ToString(),int.Parse(data["port"].ToString()), null, null);
-        bool success = result.AsyncWaitHandle.WaitOne(System.TimeSpan.FromMilliseconds(2000));
+        var connectTask = client.ConnectAsync(data["ip"].ToString(), int.Parse(data["port"].ToString()));
+        var completedTask = await Task.WhenAny(connectTask, Task.Delay(timeout));
 
-        if (!success) return false;
-
-        client.EndConnect(result);
-        return true;
+        if (completedTask == connectTask && client.Connected)
+        {
+            return true;
+        }
+        
+        return false;
     }
 
     public int get_length_proxy(){
