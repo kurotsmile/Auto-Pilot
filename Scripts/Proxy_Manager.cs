@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using Carrot;
 using SimpleFileBrowser;
 using UnityEngine;
@@ -34,10 +35,14 @@ public class Proxy_Manager : MonoBehaviour
             for(int i=0;i<this.list_proxy.Count;i++){
                 IDictionary data_p=(IDictionary) this.list_proxy[i];
                 bool is_connection=this.CheckProxy(data_p);
-                if(is_connection)
+                if(is_connection){
                     this.app.tr_all_item.GetChild(i).GetComponent<Image>().color=this.color_connection_succes;
-                else
+                    data_p["status"]="good";
+                }
+                else{
                     this.app.tr_all_item.GetChild(i).GetComponent<Image>().color=this.color_connection_fail;
+                    data_p["status"]="failed";
+                }
             }
         });
 
@@ -48,6 +53,27 @@ public class Proxy_Manager : MonoBehaviour
                 this.list_proxy=(IList)Json.Deserialize("[]");
                 this.Update_list_UI();
             });
+        });
+
+        Carrot_Box_Item item_clear_fail=this.app.Add_Item_Right("Remove proxy not connecting","Remove proxy not connecting in list",this.app.cr.sp_icon_del_data);
+        item_clear_fail.set_act(()=>{
+            IList list_p=(IList) Json.Deserialize("[]");
+            for(int i=0;i<this.list_proxy.Count;i++){
+                IDictionary data_p=(IDictionary) this.list_proxy[i];
+                if(data_p["status"]!=null){
+                    if(data_p["status"].ToString()=="good"){
+                        list_p.Add(data_p);
+                    }
+                }
+            }
+
+            if(list_p.Count>0){
+                this.list_proxy=list_p;
+                PlayerPrefs.SetString("list_proxy",Json.Serialize(this.list_proxy));
+                this.Update_list_UI();
+            }
+
+            app.cr.Show_msg("Remove proxy not connectin","Remove proxy not connectin success!",Msg_Icon.Success);
         });
     }
 
@@ -113,10 +139,12 @@ public class Proxy_Manager : MonoBehaviour
                 if(this.CheckProxy(data_vpn)){
                     app.cr.Show_msg("Check Proxy","Proxy connection good!",Msg_Icon.Success);
                     btn_check.set_color(Color.green);
+                    data_vpn["status"]="good";
                 }                    
                 else{
                     app.cr.Show_msg("Check Proxy","Proxy connection failed!",Msg_Icon.Error);
                     btn_check.set_color(Color.red);
+                    data_vpn["status"]="failed";
                 }
             });
 
