@@ -1,4 +1,5 @@
 ﻿using Carrot;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -58,6 +59,7 @@ public class App : MonoBehaviour
     public Sprite  sp_icon_export;
     public Sprite  sp_icon_import;
     public Sprite  sp_icon_script;
+    public Sprite  sp_icon_sad;
     private bool is_play_simulador=false;
     private bool is_mode_web=true;
 
@@ -78,7 +80,7 @@ public class App : MonoBehaviour
         
         this.adb_editor.Set_Act_close(Load_menu_main);
         this.adb_tasks.Set_Act_Close(Load_menu_main);
-        this.devices_manager.On_Load();
+        this.devices_manager.On_Load(Load_menu_main);
         this.proxys.On_Load(Load_menu_main);
 
         if(PlayerPrefs.GetString("path_scrcpy","")!="") this.path_scrcpy=PlayerPrefs.GetString("path_scrcpy");
@@ -254,6 +256,10 @@ public class App : MonoBehaviour
         item_proxys.set_act(()=>{
             this.proxys.Show();
         });
+
+        this.cr.clear_contain(this.tr_all_item_right);
+        Carrot_Box_Item item_mode_app=this.Add_Item_Right("Mode App","App functions",this.sp_icon_auto_app);
+        Carrot_Box_Item item_mode_web=this.Add_Item_Right("Mode Web","Web functions",this.sp_icon_auto_web);
     }
 
     public bool Get_Mode(){
@@ -262,5 +268,12 @@ public class App : MonoBehaviour
 
     public string get_path_scrcpy(){
         return this.path_scrcpy;
+    }
+
+    public void Add_none_item(){
+        Carrot_Box_Item none_item=this.Add_item_main();
+        none_item.set_icon(this.sp_icon_sad);
+        none_item.set_title("Empty list");
+        none_item.set_tip("There are no items saved in this list yet.");
     }
 }

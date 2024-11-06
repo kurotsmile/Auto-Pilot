@@ -131,6 +131,11 @@ public class Proxy_Manager : MonoBehaviour
 
     private void Update_list_UI(){
         this.app.cr.clear_contain(this.app.tr_all_item);
+        if(this.list_proxy.Count==0){
+            this.app.Add_none_item();
+            return;
+        }
+
         for(int i=0;i<this.list_proxy.Count;i++){
             var index=i;
             IDictionary data_vpn=(IDictionary) this.list_proxy[i];

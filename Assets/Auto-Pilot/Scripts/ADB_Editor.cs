@@ -63,6 +63,7 @@ public class ADB_Editor : MonoBehaviour
     private int index_edit=-1;
     
     public void On_Load(){
+        this.list_command=(IList) Carrot.Json.Deserialize("[]");
         this.panel_btn.SetActive(false);
         this.length_method=PlayerPrefs.GetInt("length_method",0);
         if(PlayerPrefs.GetString("m_"+index_sel_method+"_data","")!=""){
@@ -83,7 +84,6 @@ public class ADB_Editor : MonoBehaviour
     public void Show_Editor(int index_update=-1){
         this.index_edit=index_update;
         this.list_command=(IList) Carrot.Json.Deserialize("[]");
-        this.app.cr.clear_contain(this.app.tr_all_item);
         this.app.cr.clear_contain(this.app.tr_all_item_right);
         this.app.cr.play_sound_click();
         if(this.app.Get_Mode())
@@ -92,6 +92,7 @@ public class ADB_Editor : MonoBehaviour
             this.Load_Menu_Right_App();
         this.panel_btn.SetActive(true);
         this.Update_btn_ui();
+        this.Update_list_ui();
     }
 
     private void Load_Menu_Right_Web(Transform tr_father=null,int index_insert=-1){
@@ -277,6 +278,11 @@ public class ADB_Editor : MonoBehaviour
 
     public void Update_list_ui(){
         this.app.cr.clear_contain(this.app.tr_all_item);
+        if(this.list_command.Count==0){
+            this.app.Add_none_item();
+            return;
+        }
+
         for(int i=0;i<this.list_command.Count;i++){
                 var index=i;
                 IDictionary control_data=(IDictionary) list_command[i];

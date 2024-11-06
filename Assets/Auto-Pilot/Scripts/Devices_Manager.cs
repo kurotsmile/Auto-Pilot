@@ -19,8 +19,9 @@ public class Devices_Manager : MonoBehaviour
     [Header("UI")]
     public Text txt_devices;
     public GameObject obj_panel_btn;
-
-    public void On_Load(){
+    private UnityAction act_close=null;
+    public void On_Load(UnityAction act_close){
+        this.act_close=act_close;
         this.obj_panel_btn.SetActive(false);
         this.list_id_devices=(IList)Json.Deserialize("[]");
         if(PlayerPrefs.GetString("list_id_devices","")!=""){
@@ -30,13 +31,46 @@ public class Devices_Manager : MonoBehaviour
     }
 
     public void Show(){
-        this.Show_list_devices(Type_Show_Devices.select_devices);
+        if(this.list_id_devices.Count==0) this.Show_list_devices(Type_Show_Devices.select_devices,devices=>{
+            this.Load_list_for_main();
+        });
         this.obj_panel_btn.SetActive(true);
+        this.Load_list_for_main();
+        this.Load_list_menu_right();
+    }
+
+    private void Load_list_menu_right(){
+        this.app.cr.clear_contain(this.app.tr_all_item_right);
+        this.app.Add_Item_Right("Control via computer all","Enable scrcpy for all devices",this.app.sp_icon_scrcpy).set_act(()=>{
+            for(int i=0;i<this.list_id_devices.Count;i++){
+                string id_device=this.list_id_devices[i].ToString();
+                this.app.adb.RunScrcpyCMD("-s "+id_device);
+            }
+        });
+
+        this.app.Add_Item_Right("Restart all","Restart all devices",this.app.sp_icon_reboot).set_act(()=>{
+            this.app.adb.RunADBCommand_All_Device("reboot");
+            this.app.cr.Show_msg("Restart all","Restarted all devices!",Msg_Icon.Success);
+        });
+
+        this.app.Add_Item_Right("Power off all","Turn off all devices",this.app.sp_icon_power_off).set_act(()=>{
+            this.app.adb.RunADBCommand_All_Device("reboot -p");
+            this.app.cr.Show_msg("Power off all","All devices are powered off!",Msg_Icon.Success);
+        });
     }
 
     public void Load_list_for_main(){
         this.app.cr.clear_contain(this.app.tr_all_item);
-        
+        if(this.list_id_devices.Count>0){
+            for(int i=0;i<list_id_devices.Count;i++){
+                Carrot_Box_Item box_device_item=this.app.Add_item_main();
+                box_device_item.set_icon(this.app.cr.icon_carrot_app);
+                box_device_item.set_title(this.list_id_devices[i].ToString());
+                box_device_item.set_tip("Device Android");
+            }
+        }else{
+            this.app.Add_none_item();
+        }
     }
 
     public void Show_list_devices(Type_Show_Devices type=Type_Show_Devices.select_devices,UnityAction<string> act_done=null){
@@ -190,6 +224,7 @@ public class Devices_Manager : MonoBehaviour
                     this.Update_Ui();
                     box_devices.close();
                     this.app.cr.play_sound_click();
+                    act_done?.Invoke(Json.Serialize(this.list_id_devices));
                 });
 
                 Carrot_Button_Item btn_cancel=btn_Panel.create_btn("btn_cancel");
@@ -225,5 +260,10 @@ public class Devices_Manager : MonoBehaviour
 
     public void Btn_Close(){
         this.obj_panel_btn.SetActive(false);
+        act_close?.Invoke();
+    }
+
+    public void Btn_show_add_devices(){
+        this.Show_list_devices(Type_Show_Devices.select_devices);
     }
 }
