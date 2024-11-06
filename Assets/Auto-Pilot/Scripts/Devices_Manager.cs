@@ -18,8 +18,10 @@ public class Devices_Manager : MonoBehaviour
     public IList list_id_devices;
     [Header("UI")]
     public Text txt_devices;
+    public GameObject obj_panel_btn;
 
     public void On_Load(){
+        this.obj_panel_btn.SetActive(false);
         this.list_id_devices=(IList)Json.Deserialize("[]");
         if(PlayerPrefs.GetString("list_id_devices","")!=""){
             this.list_id_devices=(IList)Json.Deserialize(PlayerPrefs.GetString("list_id_devices"));
@@ -29,6 +31,12 @@ public class Devices_Manager : MonoBehaviour
 
     public void Show(){
         this.Show_list_devices(Type_Show_Devices.select_devices);
+        this.obj_panel_btn.SetActive(true);
+    }
+
+    public void Load_list_for_main(){
+        this.app.cr.clear_contain(this.app.tr_all_item);
+        
     }
 
     public void Show_list_devices(Type_Show_Devices type=Type_Show_Devices.select_devices,UnityAction<string> act_done=null){
@@ -213,5 +221,9 @@ public class Devices_Manager : MonoBehaviour
 
     private void Update_Ui(){
         this.txt_devices.text="List Devices("+this.list_id_devices.Count+")";
+    }
+
+    public void Btn_Close(){
+        this.obj_panel_btn.SetActive(false);
     }
 }
