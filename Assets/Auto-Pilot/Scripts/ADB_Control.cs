@@ -144,7 +144,7 @@ public class ADB_Control : MonoBehaviour
     public void RunCommandWithMemu(string s_command,UnityAction<string> act_done=null)
     {
         string command = "/C "+this.app.get_path_memu()+"\\MEmuc.exe -i 1 " + s_command;
-        System.Diagnostics.Process process = new System.Diagnostics.Process();
+        System.Diagnostics.Process process = new();
         process.StartInfo.FileName = "cmd.exe";
         process.StartInfo.Arguments = command;
         process.StartInfo.RedirectStandardOutput = true;
@@ -159,7 +159,7 @@ public class ADB_Control : MonoBehaviour
 
     public void RunPowershellCMD(string command,UnityAction<string> Act_done=null)
     {
-        System.Diagnostics.Process process = new System.Diagnostics.Process();
+        System.Diagnostics.Process process = new();
         process.StartInfo.FileName = "powershell.exe";
         process.StartInfo.Arguments = command;
 

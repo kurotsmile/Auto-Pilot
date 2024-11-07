@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Carrot;
+using SimpleFileBrowser;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -63,11 +64,23 @@ public class Devices_Manager : MonoBehaviour
         this.app.cr.clear_contain(this.app.tr_all_item);
         if(this.list_id_devices.Count>0){
             for(int i=0;i<list_id_devices.Count;i++){
+                var index=i;
                 Carrot_Box_Item box_device_item=this.app.Add_item_main();
                 box_device_item.set_icon(this.app.cr.icon_carrot_app);
                 box_device_item.set_title(this.list_id_devices[i].ToString());
                 box_device_item.set_tip("Device Android");
+
+                Carrot_Box_Btn_Item btn_del=box_device_item.create_item();
+                btn_del.set_icon(this.app.cr.sp_icon_del_data);
+                btn_del.set_icon_color(Color.white);
+                btn_del.set_color(this.app.cr.color_highlight);
+                btn_del.set_act(()=>{
+                    list_id_devices.RemoveAt(index);
+                    PlayerPrefs.SetString("list_id_devices",Json.Serialize(this.list_id_devices));
+                    this.Load_list_for_main();
+                });
             }
+
         }else{
             this.app.Add_none_item();
         }
@@ -216,9 +229,8 @@ public class Devices_Manager : MonoBehaviour
                 btn_done.set_label_color(Color.white);
                 btn_done.set_icon_white(this.app.cr.icon_carrot_done);
                 btn_done.set_act_click(()=>{
-                    this.list_id_devices=new List<string>();
                     for(int i=0;i<list_device.Count;i++){
-                        if(list_select[i]) this.list_id_devices.Add(list_device[i]);
+                        if (!list_id_devices.Contains(list_device[i])) list_id_devices.Add(list_device[i]);
                     }
                     PlayerPrefs.SetString("list_id_devices",Json.Serialize(this.list_id_devices));
                     this.Update_Ui();
@@ -265,5 +277,28 @@ public class Devices_Manager : MonoBehaviour
 
     public void Btn_show_add_devices(){
         this.Show_list_devices(Type_Show_Devices.select_devices);
+    }
+
+    public void Btn_Show_Import(){
+        this.app.excel.Show_import(type=>{
+            if(type==TYPE_DATA_IE.data_json){
+                this.app.file.Save_file(paths=>{
+                    string s_path=paths[0];
+                    string s_data=FileBrowserHelpers.ReadTextFromFile(s_path);
+                    this.list_id_devices=(IList) Json.Deserialize(s_data);
+                });
+            }
+        });
+    }
+
+    public void Btn_Show_export(){
+        this.app.excel.Show_export(type=>{
+            if(type==TYPE_DATA_IE.data_json){
+                this.app.file.Save_file(paths=>{
+                    string s_path=paths[0];
+                    FileBrowserHelpers.WriteTextToFile(s_path,Json.Serialize(this.list_id_devices));
+                });
+            }
+        });
     }
 }
