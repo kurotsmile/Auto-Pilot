@@ -245,7 +245,7 @@ public class Proxy_Manager : MonoBehaviour
                 this.app.file.Set_filter(Carrot_File_Data.JsonData);
                 this.app.file.Save_file(paths=>{
                     FileBrowserHelpers.WriteTextToFile(paths[0],Json.Serialize(this.list_proxy));
-                    this.Show_export_success(paths[0]);
+                    this.app.excel.Show_export_success(paths[0]);
                 });
             }
 
@@ -258,7 +258,7 @@ public class Proxy_Manager : MonoBehaviour
                         s_data+=""+data_p["ip"].ToString()+":"+data_p["port"].ToString()+"\n";
                     }
                     FileBrowserHelpers.WriteTextToFile(paths[0],s_data);
-                    this.Show_export_success(paths[0]);
+                    this.app.excel.Show_export_success(paths[0]);
                 });
             }
 
@@ -271,14 +271,10 @@ public class Proxy_Manager : MonoBehaviour
                         s_data+=""+data_p["ip"].ToString()+","+data_p["port"].ToString()+"\n";
                     }
                     FileBrowserHelpers.WriteTextToFile(paths[0],s_data);
-                    this.Show_export_success(paths[0]);
+                    this.app.excel.Show_export_success(paths[0]);
                 });
             }
         });
-    }
-
-    private void Show_export_success(string s_path){
-        this.app.cr.Show_msg("Export","Data export successful at path:\n"+s_path,Msg_Icon.Success);
     }
 
     public void Btn_get_api_proxy(){

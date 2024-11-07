@@ -94,4 +94,8 @@ public class Excel_Data : MonoBehaviour
         });
         return box;
     }
+
+    public void Show_export_success(string s_path){
+        this.app.cr.Show_msg("Export","Data export successful at path:\n"+s_path,Msg_Icon.Success);
+    }
 }

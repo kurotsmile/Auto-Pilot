@@ -282,10 +282,40 @@ public class Devices_Manager : MonoBehaviour
     public void Btn_Show_Import(){
         this.app.excel.Show_import(type=>{
             if(type==TYPE_DATA_IE.data_json){
-                this.app.file.Save_file(paths=>{
+                this.app.file.Set_filter(Carrot_File_Data.JsonData);
+                this.app.file.Open_file(paths=>{
                     string s_path=paths[0];
                     string s_data=FileBrowserHelpers.ReadTextFromFile(s_path);
                     this.list_id_devices=(IList) Json.Deserialize(s_data);
+                    PlayerPrefs.SetString("list_id_devices",Json.Serialize(this.list_id_devices));
+                    this.Load_list_for_main();
+                    this.app.cr.Show_msg("Import","Data import successful!",Msg_Icon.Success);
+                });
+            }
+
+            if(type==TYPE_DATA_IE.data_txt){
+                this.app.file.Set_filter(Carrot_File_Data.TextDocument);
+                this.app.file.Open_file(paths=>{
+                    string response=FileBrowserHelpers.ReadTextFromFile(paths[0]);
+                    string[] devices = response.Split(new[] { "\r\n", "\r", "\n" }, System.StringSplitOptions.RemoveEmptyEntries);
+                    this.list_id_devices=(IList) Json.Deserialize("[]");
+                    foreach (string id_device in devices) this.list_id_devices.Add(id_device);
+                    PlayerPrefs.SetString("list_id_devices",Json.Serialize(this.list_id_devices));
+                    this.Load_list_for_main();
+                    this.app.cr.Show_msg("Import","Data import successful!",Msg_Icon.Success);
+                });
+            }
+
+            if(type==TYPE_DATA_IE.data_excel){
+                this.app.file.Set_filter(Carrot_File_Data.ExelData);
+                this.app.file.Open_file(paths=>{
+                    string response=FileBrowserHelpers.ReadTextFromFile(paths[0]);
+                    string[] devices = response.Split(new[] { "\r\n", "\r", "\n" }, System.StringSplitOptions.RemoveEmptyEntries);
+                    this.list_id_devices=(IList) Json.Deserialize("[]");
+                    foreach (string id_device in devices) this.list_id_devices.Add(id_device);
+                    PlayerPrefs.SetString("list_id_devices",Json.Serialize(this.list_id_devices));
+                    this.Load_list_for_main();
+                    this.app.cr.Show_msg("Import","Data import successful!",Msg_Icon.Success);
                 });
             }
         });
@@ -294,9 +324,35 @@ public class Devices_Manager : MonoBehaviour
     public void Btn_Show_export(){
         this.app.excel.Show_export(type=>{
             if(type==TYPE_DATA_IE.data_json){
+                this.app.file.Set_filter(Carrot_File_Data.JsonData);
                 this.app.file.Save_file(paths=>{
                     string s_path=paths[0];
                     FileBrowserHelpers.WriteTextToFile(s_path,Json.Serialize(this.list_id_devices));
+                    this.app.excel.Show_export_success(paths[0]);
+                });
+            }
+
+            if(type==TYPE_DATA_IE.data_txt){
+                this.app.file.Set_filter(Carrot_File_Data.TextDocument);
+                this.app.file.Save_file(paths=>{
+                    string s_data="";
+                    for(int i=0;i<this.list_id_devices.Count;i++){
+                        s_data+=this.list_id_devices[i]+"\n";
+                    }
+                    FileBrowserHelpers.WriteTextToFile(paths[0],s_data);
+                    this.app.excel.Show_export_success(paths[0]);
+                });
+            }
+
+            if(type==TYPE_DATA_IE.data_excel){
+                this.app.file.Set_filter(Carrot_File_Data.ExelData);
+                this.app.file.Save_file(paths=>{
+                    string s_data="";
+                    for(int i=0;i<this.list_id_devices.Count;i++){
+                        s_data+=this.list_id_devices[i]+"\n";
+                    }
+                    FileBrowserHelpers.WriteTextToFile(paths[0],s_data);
+                    this.app.excel.Show_export_success(paths[0]);
                 });
             }
         });
