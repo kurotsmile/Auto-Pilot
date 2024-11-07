@@ -9126,6 +9126,7 @@ MonoBehaviour:
   sp_icon_import: {fileID: 21300000, guid: 828b9f138b8358f4494a2abfe8cdf76f, type: 3}
   sp_icon_script: {fileID: 21300000, guid: bb6b74a7e990d3e438540ff4c760e157, type: 3}
   sp_icon_sad: {fileID: 21300000, guid: 58d9dac85fbf52649ac61d458096600b, type: 3}
+  sp_icon_emulator: {fileID: 21300000, guid: a3117df96b23c8c48b98d4c62021118c, type: 3}
 --- !u!114 &1667508231
 MonoBehaviour:
   m_ObjectHideFlags: 0

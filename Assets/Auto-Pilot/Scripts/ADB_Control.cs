@@ -143,7 +143,7 @@ public class ADB_Control : MonoBehaviour
 
     public void RunCommandWithMemu(string s_command,UnityAction<string> act_done=null)
     {
-        string command = "/C J:\\Microvirt\\MEmu\\MEmuc.exe -i 1 " + s_command;
+        string command = "/C "+this.app.get_path_memu()+"\\MEmuc.exe -i 1 " + s_command;
         System.Diagnostics.Process process = new System.Diagnostics.Process();
         process.StartInfo.FileName = "cmd.exe";
         process.StartInfo.Arguments = command;

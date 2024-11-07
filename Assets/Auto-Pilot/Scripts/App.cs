@@ -1,7 +1,5 @@
 ﻿using Carrot;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
 public class App : MonoBehaviour
 {
@@ -60,11 +58,13 @@ public class App : MonoBehaviour
     public Sprite  sp_icon_import;
     public Sprite  sp_icon_script;
     public Sprite  sp_icon_sad;
+    public Sprite sp_icon_emulator;
     private bool is_play_simulador=false;
     private bool is_mode_web=true;
 
     private string  path_scrcpy="";
     private string path_adb="";
+    private string path_memu="";
     void Start()
     {
         this.cr.Load_Carrot();
@@ -85,6 +85,7 @@ public class App : MonoBehaviour
 
         if(PlayerPrefs.GetString("path_scrcpy","")!="") this.path_scrcpy=PlayerPrefs.GetString("path_scrcpy");
         if(PlayerPrefs.GetString("path_adb","")!="") this.path_adb=PlayerPrefs.GetString("path_adb");
+        if(PlayerPrefs.GetString("path_memu","")!="") this.path_memu=PlayerPrefs.GetString("path_memu");
 
         this.Load_menu_main();
     }
@@ -153,6 +154,15 @@ public class App : MonoBehaviour
     public void Btn_show_setting(){
         Carrot_Box box_setting=this.cr.Create_Setting();
 
+        Carrot_Box_Item item_path_memu=box_setting.create_item_of_top("item_path_memu");
+        item_path_memu.set_icon(this.sp_icon_emulator);
+        item_path_memu.set_type(Box_Item_Type.box_value_input);
+        item_path_memu.set_title("Memu Path");
+        item_path_memu.set_tip("Change the path to Memu emulator");
+        item_path_memu.check_type();
+        item_path_memu.set_val(this.path_memu);
+        Create_btn_Open(item_path_memu);
+
         Carrot_Box_Item item_path_scrcpy=box_setting.create_item_of_top("item_path_scrcpy");
         item_path_scrcpy.set_icon(this.sp_icon_scrcpy);
         item_path_scrcpy.set_type(Box_Item_Type.box_value_input);
@@ -183,8 +193,10 @@ public class App : MonoBehaviour
         box_setting.set_act_before_closing(()=>{
             this.path_scrcpy=item_path_scrcpy.get_val();
             this.path_adb=item_path_adb.get_val();
+            this.path_memu=item_path_memu.get_val();
             PlayerPrefs.SetString("path_scrcpy",item_path_scrcpy.get_val());
             PlayerPrefs.SetString("path_adb",item_path_adb.get_val());
+            PlayerPrefs.SetString("path_menu",item_path_memu.get_val());
         });
     }
 
@@ -268,6 +280,10 @@ public class App : MonoBehaviour
 
     public string get_path_scrcpy(){
         return this.path_scrcpy;
+    }
+
+    public string get_path_memu(){
+        return this.path_memu;
     }
 
     public void Add_none_item(){
