@@ -271,7 +271,9 @@ public class App : MonoBehaviour
 
         this.cr.clear_contain(this.tr_all_item_right);
         Carrot_Box_Item item_mode_app=this.Add_Item_Right("Mode App","App functions",this.sp_icon_auto_app);
+        item_mode_app.set_act(this.Btn_model_app);
         Carrot_Box_Item item_mode_web=this.Add_Item_Right("Mode Web","Web functions",this.sp_icon_auto_web);
+        item_mode_web.set_act(this.Btn_model_web);
     }
 
     public bool Get_Mode(){
@@ -292,4 +294,17 @@ public class App : MonoBehaviour
         none_item.set_title("Empty list");
         none_item.set_tip("There are no items saved in this list yet.");
     }
+
+    public void Btn_model_app(){
+        this.is_mode_web=false;
+        this.cr.play_sound_click();
+        this.Check_status_mode();
+    }
+
+    public void Btn_model_web(){
+        this.is_mode_web=true;
+        this.cr.play_sound_click();
+        this.Check_status_mode();
+    }
+
 }

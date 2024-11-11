@@ -13,29 +13,6 @@ public class Excel_Data : MonoBehaviour
 {
     [Header("Main Obj")]
     public App app;
-    private List<List<string>> list_data_temp;
-    public void Open_file(){
-        this.app.file.Set_filter(Carrot.Carrot_File_Data.ExelData);
-        this.app.file.Open_file(this.Load_file_excel);
-    }
-
-    private void Load_file_excel(string[] s_path){
-
-    }
-
-    public void Save_file(List<List<string>> list_data){
-        this.list_data_temp=list_data;
-        this.app.file.Set_filter(Carrot.Carrot_File_Data.ExelData);
-        this.app.file.Save_file(this.Write_file_excel);
-    }
-
-    public void Write_file_excel(string[] s_paths){
-        string s_path=s_paths[0];
-        for(int i=0;i<list_data_temp.Count;i++){
-            List<string> l_data_item=list_data_temp[i];
-            FileBrowserHelpers.AppendTextToFile(s_path,l_data_item[0]);
-        }
-    }
 
     public Carrot_Box Show_export(UnityAction<TYPE_DATA_IE> act_done){
         Carrot_Box box=this.Show_frm_export_and_import(true,act_done);
@@ -64,6 +41,7 @@ public class Excel_Data : MonoBehaviour
         }
 
         item_json.set_act(()=>{
+            box.close();
             act_done?.Invoke(TYPE_DATA_IE.data_json);
         });
 
@@ -77,6 +55,7 @@ public class Excel_Data : MonoBehaviour
             item_txt.set_tip("Import data to text file (*.txt)");
         }
         item_txt.set_act(()=>{
+            box.close();
             act_done?.Invoke(TYPE_DATA_IE.data_txt);
         });
 
@@ -90,6 +69,7 @@ public class Excel_Data : MonoBehaviour
             item_excel.set_tip("Import data to excel file (*.csv)"); 
         }
         item_excel.set_act(()=>{
+            box.close();
             act_done?.Invoke(TYPE_DATA_IE.data_excel);
         });
         return box;
@@ -97,5 +77,9 @@ public class Excel_Data : MonoBehaviour
 
     public void Show_export_success(string s_path){
         this.app.cr.Show_msg("Export","Data export successful at path:\n"+s_path,Msg_Icon.Success);
+    }
+
+    public void Show_import_success(string s_path){
+        this.app.cr.Show_msg("Import","Data import successful at path:\n"+s_path,Msg_Icon.Success);
     }
 }

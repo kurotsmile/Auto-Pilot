@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using Carrot;
 using SimpleFileBrowser;
 using UnityEngine;
@@ -52,21 +53,6 @@ public class ADB_List_task : MonoBehaviour
         act_close?.Invoke();
     }
 
-    public void Open_file_tastk_app(){
-        this.app.cr.play_sound_click();
-        this.app.file.Set_filter(Carrot_File_Data.JsonData);
-        this.app.file.Open_file(paths=>{
-            this.index_cur_task=0;
-            this.app.cr.clear_contain(this.app.tr_all_item);
-            string s_path=paths[0];
-            string fileContent = FileBrowserHelpers.ReadTextFromFile(s_path);
-            this.list_task=(IList) Json.Deserialize(fileContent);
-            PlayerPrefs.SetString("s_data_task_temp",fileContent);
-            this.Update_list_task_ui();
-        });
-    }
-
-
     private void Update_list_task_ui(){
         this.app.cr.clear_contain(this.app.tr_all_item);
         for(int i=0;i<this.list_task.Count;i++){
@@ -74,12 +60,12 @@ public class ADB_List_task : MonoBehaviour
             var index=i;
             var id_app=data_app[0].ToString();
             Carrot_Box_Item box_item=this.app.Add_item_main();
-            box_item.set_title("App "+i);
+            box_item.set_title("App "+index);
             box_item.txt_name.color=Color.white;
             box_item.set_tip(id_app);
             box_item.set_icon_white(this.app.cr.icon_carrot_app);
 
-            this.app.apps.Extension_btn_item_App(id_app,box_item);
+            this.app.apps.Extension_btn_item_App(data_app,box_item);
             
             box_item.set_act(()=>{
                 this.index_cur_task=index;
@@ -155,18 +141,33 @@ public class ADB_List_task : MonoBehaviour
         }
     }
 
-    public void Save_File_List_App(){
-        this.app.file.Set_filter(Carrot_File_Data.JsonData);
-        this.app.file.Save_file(pasths=>{
-            string s_path=pasths[0];
-            this.SaveListToFile(s_path);
+    public void Btn_export(){
+        this.app.excel.Show_export(type=>{
+            if(type==TYPE_DATA_IE.data_json){
+                this.app.file.Save_file(paths=>{
+                    string filePath=paths[0];
+                    FileBrowserHelpers.WriteTextToFile(filePath,Json.Serialize(this.list_task));
+                    this.app.excel.Show_export_success(filePath);
+                });
+            }
         });
     }
 
-    private void SaveListToFile(string filePath)
-    {
-        FileBrowserHelpers.WriteTextToFile(filePath,Json.Serialize(this.list_task));
-        this.app.cr.Show_msg("Save Excel","Save File Excel Success!\nAt:"+filePath,Msg_Icon.Success);
+    public void Btn_import(){
+        this.app.excel.Show_import(type=>{
+            if(type==TYPE_DATA_IE.data_json){
+                this.app.file.Set_filter(Carrot_File_Data.JsonData);
+                this.app.file.Open_file(paths=>{
+                    this.index_cur_task=0;
+                    this.app.cr.clear_contain(this.app.tr_all_item);
+                    string fileContent = FileBrowserHelpers.ReadTextFromFile(paths[0]);
+                    this.list_task=(IList) Json.Deserialize(fileContent);
+                    PlayerPrefs.SetString("s_data_task_temp",Json.Serialize(this.list_task));
+                    this.Update_list_task_ui();
+                    this.app.excel.Show_import_success(paths[0]);
+                });
+            }
+        });
     }
 
     public void Set_Act_Close(UnityAction act){
