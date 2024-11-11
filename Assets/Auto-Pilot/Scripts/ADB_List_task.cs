@@ -72,6 +72,53 @@ public class ADB_List_task : MonoBehaviour
                 this.app.txt_status_app.text="Select app index:"+index;
             });
 
+            Carrot_Box_Btn_Item btn_order=box_item.create_item();
+            btn_order.set_icon_color(Color.white);
+            btn_order.set_color(app.cr.color_highlight);
+            btn_order.set_icon(this.app.sp_icon_sort);
+            btn_order.set_act(()=>{
+                Carrot_Box box_sort=this.app.cr.Create_Box();
+                box_sort.set_icon(this.app.sp_icon_sort);
+                box_sort.set_title("Sort");
+
+                Carrot_Box_Item item_inp_order=box_sort.create_item();
+                item_inp_order.set_icon(this.app.cr.icon_carrot_write);
+                item_inp_order.set_title("Order App");
+                item_inp_order.set_tip("Change order app");
+                item_inp_order.set_type(Box_Item_Type.box_value_slider);
+                item_inp_order.slider_val.maxValue=this.list_task.Count;
+                item_inp_order.slider_val.minValue=0;
+                item_inp_order.slider_val.wholeNumbers=true;
+                item_inp_order.set_val(index.ToString());
+                item_inp_order.check_type();
+
+                Carrot_Box_Btn_Panel btn_Panel=box_sort.create_panel_btn();
+                Carrot_Button_Item btn_done=btn_Panel.create_btn("btn_done");
+                btn_done.set_bk_color(this.app.cr.color_highlight);
+                btn_done.set_label("Done");
+                btn_done.set_label_color(Color.white);
+                btn_done.set_icon_white(this.app.cr.icon_carrot_done);
+                btn_done.set_act_click(()=>{
+                    int index_sel=int.Parse(item_inp_order.get_val());
+                    object temp = this.list_task[index_sel];
+                    this.list_task[index_sel] = this.list_task[index];
+                    this.list_task[index] = temp;
+                    this.Update_list_task_ui();
+                    box_sort.close();
+                    this.app.cr.play_sound_click();
+                });
+
+                Carrot_Button_Item btn_cancel=btn_Panel.create_btn("btn_cancel");
+                btn_cancel.set_bk_color(this.app.cr.color_highlight);
+                btn_cancel.set_label("Cancel");
+                btn_cancel.set_label_color(Color.white);
+                btn_cancel.set_icon_white(this.app.cr.icon_carrot_cancel);
+                btn_cancel.set_act_click(()=>{
+                    box_sort.close();
+                    this.app.cr.play_sound_click();
+                });
+            });
+
             Carrot_Box_Btn_Item btn_edit=box_item.create_item();
             btn_edit.set_icon_color(Color.white);
             btn_edit.set_icon(app.cr.user.icon_user_edit);
@@ -116,6 +163,7 @@ public class ADB_List_task : MonoBehaviour
                     data_app=data;
                     this.list_task[index]=Json.Serialize(data);
                     this.Update_data();
+                    this.Update_list_task_ui();
                     box_edit_info.close();
                     this.app.cr.play_sound_click();
                 });

@@ -59,6 +59,7 @@ public class App : MonoBehaviour
     public Sprite  sp_icon_script;
     public Sprite  sp_icon_sad;
     public Sprite sp_icon_emulator;
+    public Sprite sp_icon_sort;
     private bool is_play_simulador=false;
     private bool is_mode_web=true;
 

@@ -108,6 +108,9 @@ namespace Carrot
                 if(type==Box_Item_Type.box_value_slider){
                     this.slider_val.gameObject.SetActive(true);
                     Destroy(this.GetComponent<Button>());
+                    this.slider_val.onValueChanged.AddListener(val=>{
+                        this.txt_tip.text=val.ToString();
+                    });
                 }
                 r.offsetMin = new Vector2(r.offsetMin.x, -100.0f);
             }
