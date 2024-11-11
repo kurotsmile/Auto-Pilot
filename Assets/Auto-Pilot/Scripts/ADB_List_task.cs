@@ -19,7 +19,6 @@ public class ADB_List_task : MonoBehaviour
     private IList list_task;
     private int index_cur_task=0;
     private bool is_play=false;
-    private string s_data_task_temp=null;
     private UnityAction act_close;
 
     public void On_Load(){
@@ -37,8 +36,7 @@ public class ADB_List_task : MonoBehaviour
         this.app.adb_editor.Update_list_ui_Method_right_menu();
         if(list_task_app==null){
             if(PlayerPrefs.GetString("s_data_task_temp","")!=""){
-                this.s_data_task_temp= PlayerPrefs.GetString("s_data_task_temp");
-                this.list_task=(IList) Json.Deserialize(this.s_data_task_temp);
+                this.list_task=(IList) Json.Deserialize(PlayerPrefs.GetString("s_data_task_temp"));
                 this.Update_list_task_ui();
             }
         }else{
@@ -59,17 +57,78 @@ public class ADB_List_task : MonoBehaviour
             IList data_app=(IList) Json.Deserialize(this.list_task[i].ToString());
             var index=i;
             var id_app=data_app[0].ToString();
+            string s_name_app="App "+index;
+            if(data_app.Count>=2) s_name_app=data_app[1].ToString();
             Carrot_Box_Item box_item=this.app.Add_item_main();
-            box_item.set_title("App "+index);
+            box_item.set_title(s_name_app);
             box_item.txt_name.color=Color.white;
             box_item.set_tip(id_app);
             box_item.set_icon_white(this.app.cr.icon_carrot_app);
 
-            this.app.apps.Extension_btn_item_App(data_app,box_item);
+            this.app.apps.Extension_btn_item_App(id_app,box_item);
             
             box_item.set_act(()=>{
                 this.index_cur_task=index;
                 this.app.txt_status_app.text="Select app index:"+index;
+            });
+
+            Carrot_Box_Btn_Item btn_edit=box_item.create_item();
+            btn_edit.set_icon_color(Color.white);
+            btn_edit.set_icon(app.cr.user.icon_user_edit);
+            btn_edit.set_color(app.cr.color_highlight);
+            btn_edit.set_act(()=>{
+                Carrot_Box box_edit_info=this.app.cr.Create_Box();
+                box_edit_info.set_icon(this.app.cr.user.icon_user_edit);
+                box_edit_info.set_title("Edit Info");
+
+                Carrot_Box_Item item_inp_id_app=box_edit_info.create_item();
+                item_inp_id_app.set_icon(this.app.cr.icon_carrot_write);
+                item_inp_id_app.set_title("Id App");
+                item_inp_id_app.set_tip("Change application package name");
+                item_inp_id_app.set_type(Box_Item_Type.box_value_input);
+                if(data_app.Count>=1) item_inp_id_app.set_val(data_app[0].ToString());
+
+                Carrot_Box_Item item_inp_name=box_edit_info.create_item();
+                item_inp_name.set_icon(this.app.cr.icon_carrot_write);
+                item_inp_name.set_title("Name App");
+                item_inp_name.set_tip("Enter application name");
+                item_inp_name.set_type(Box_Item_Type.box_value_input);
+                if(data_app.Count>=2) item_inp_name.set_val(data_app[1].ToString());
+
+                Carrot_Box_Item item_inp_note=box_edit_info.create_item();
+                item_inp_note.set_icon(this.app.cr.icon_carrot_write);
+                item_inp_note.set_title("Note");
+                item_inp_note.set_tip("Short description for this app");
+                item_inp_note.set_type(Box_Item_Type.box_value_input);
+                if(data_app.Count>=3) item_inp_note.set_val(data_app[2].ToString());
+
+                Carrot_Box_Btn_Panel btn_Panel=box_edit_info.create_panel_btn();
+                Carrot_Button_Item btn_done=btn_Panel.create_btn("btn_done");
+                btn_done.set_bk_color(this.app.cr.color_highlight);
+                btn_done.set_label("Done");
+                btn_done.set_label_color(Color.white);
+                btn_done.set_icon_white(this.app.cr.icon_carrot_done);
+                btn_done.set_act_click(()=>{
+                    IList data=(IList) Json.Deserialize("[]");
+                    data.Add(item_inp_id_app.get_val());
+                    data.Add(item_inp_name.get_val());
+                    data.Add(item_inp_note.get_val());
+                    data_app=data;
+                    this.list_task[index]=Json.Serialize(data);
+                    this.Update_data();
+                    box_edit_info.close();
+                    this.app.cr.play_sound_click();
+                });
+
+                Carrot_Button_Item btn_cancel=btn_Panel.create_btn("btn_cancel");
+                btn_cancel.set_bk_color(this.app.cr.color_highlight);
+                btn_cancel.set_label("Cancel");
+                btn_cancel.set_label_color(Color.white);
+                btn_cancel.set_icon_white(this.app.cr.icon_carrot_cancel);
+                btn_cancel.set_act_click(()=>{
+                    box_edit_info.close();
+                    this.app.cr.play_sound_click();
+                });
             });
 
             Carrot_Box_Btn_Item btn_del=box_item.create_item();
@@ -202,5 +261,9 @@ public class ADB_List_task : MonoBehaviour
 
     public int get_count_list_task(){
         return list_task.Count;
+    }
+
+    private void Update_data(){
+        PlayerPrefs.SetString("s_data_task_temp",Json.Serialize(this.list_task));
     }
 }
