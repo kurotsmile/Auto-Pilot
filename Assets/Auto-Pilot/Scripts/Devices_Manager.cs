@@ -71,6 +71,11 @@ public class Devices_Manager : MonoBehaviour
                 box_device_item.set_title(this.list_id_devices[i].ToString());
                 box_device_item.set_tip("Device Android");
 
+                box_device_item.set_act(()=>{
+                    this.app.txt_status_app.text="Select device:"+id_device;
+                    this.app.cr.play_sound_click();
+                });
+
                 Carrot_Box_Btn_Item btn_menu=box_device_item.create_item();
                 btn_menu.set_icon(this.app.cr.icon_carrot_all_category);
                 btn_menu.set_icon_color(Color.white);
@@ -370,5 +375,48 @@ public class Devices_Manager : MonoBehaviour
     private void Show_menu(string id_device){
          Carrot_Box box_menu=this.app.cr.Create_Box();
          box_menu.set_icon(this.app.cr.icon_carrot_all_category);
+         box_menu.set_title(id_device);
+
+        Carrot_Box_Item item_enable_pos=box_menu.create_item();
+        item_enable_pos.set_icon(this.app.sp_icon_postion_click);
+        item_enable_pos.set_title("Enable Touch Location");
+        item_enable_pos.set_tip("Open the touch location display locator");
+        item_enable_pos.set_act(()=>{
+            this.app.adb.RunADBCommand_One_Device(id_device,"shell settings put system pointer_location 1");
+            this.app.cr.play_sound_click();
+        });
+
+        Carrot_Box_Item item_off_pos=box_menu.create_item();
+        item_off_pos.set_icon(this.app.sp_icon_postion_click_off);
+        item_off_pos.set_title("Turn off Touch Position");
+        item_off_pos.set_tip("Disable mouse display on this device");
+        item_off_pos.set_act(()=>{
+            this.app.adb.RunADBCommand_One_Device(id_device,"shell settings put system pointer_location 0");
+            this.app.cr.play_sound_click();
+        });
+
+        Carrot_Box_Item item_scrcpy=box_menu.create_item();
+        item_scrcpy.set_icon(this.app.sp_icon_scrcpy);
+        item_scrcpy.set_title("Open screen control mode");
+        item_scrcpy.set_tip("Enable Scrcpy screen control for this device");
+        item_scrcpy.set_act(()=>{
+            this.app.adb.RunScrcpyCMD("-s "+id_device);
+        });
+
+        Carrot_Box_Item item_reboot=box_menu.create_item();
+        item_reboot.set_icon(this.app.sp_icon_reboot);
+        item_reboot.set_title("Restart");
+        item_reboot.set_tip("Restart this device");
+        item_reboot.set_act(()=>{
+            this.app.adb.RunADBCommand_One_Device(id_device,"reboot");
+        });
+
+        Carrot_Box_Item btn_power_off=box_menu.create_item();
+        btn_power_off.set_icon(this.app.sp_icon_power_off);
+        btn_power_off.set_title("Power off");
+        btn_power_off.set_tip("Power off this device");
+        btn_power_off.set_act(()=>{
+            this.app.adb.RunADBCommand_One_Device(id_device,"reboot -p");
+        });
     }
 }
