@@ -65,10 +65,19 @@ public class Devices_Manager : MonoBehaviour
         if(this.list_id_devices.Count>0){
             for(int i=0;i<list_id_devices.Count;i++){
                 var index=i;
+                var id_device=this.list_id_devices[i].ToString();
                 Carrot_Box_Item box_device_item=this.app.Add_item_main();
                 box_device_item.set_icon(this.app.cr.icon_carrot_app);
                 box_device_item.set_title(this.list_id_devices[i].ToString());
                 box_device_item.set_tip("Device Android");
+
+                Carrot_Box_Btn_Item btn_menu=box_device_item.create_item();
+                btn_menu.set_icon(this.app.cr.icon_carrot_all_category);
+                btn_menu.set_icon_color(Color.white);
+                btn_menu.set_color(this.app.cr.color_highlight);
+                btn_menu.set_act(()=>{
+                    this.Show_menu(id_device);
+                });
 
                 Carrot_Box_Btn_Item btn_del=box_device_item.create_item();
                 btn_del.set_icon(this.app.cr.sp_icon_del_data);
@@ -356,5 +365,10 @@ public class Devices_Manager : MonoBehaviour
                 });
             }
         });
+    }
+
+    private void Show_menu(string id_device){
+         Carrot_Box box_menu=this.app.cr.Create_Box();
+         box_menu.set_icon(this.app.cr.icon_carrot_all_category);
     }
 }
